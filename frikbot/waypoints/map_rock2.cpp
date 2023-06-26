@@ -1,0 +1,118 @@
+// QC Waypoint Dump - src/frikbot/map_rock2.qc
+// For instructions please read the
+// readme.html that comes with FrikBot
+
+void frik_createWaypoint(const vector& org, const vector& bit1, float bit4, float flargs);
+// Ways by -Pulseczar-
+
+void map_rock2()
+{
+	frik_createWaypoint(V({1545.0, 2301.0, 670.0}), V({2, 0, 0}), 0, 0);
+	frik_createWaypoint(V({1236.0, 2288.0, 638.0}), V({0, 3, 0}), 0, 0);
+	frik_createWaypoint(V({964.0, 2283.0, 638.0}), V({0, 4, 5}), 14, 0);
+	frik_createWaypoint(V({995.0, 2738.0, 638.0}), V({3, 13, 0}), 0, 0);
+	frik_createWaypoint(V({956.0, 1826.0, 638.0}), V({3, 6, 0}), 0, 0);
+	frik_createWaypoint(V({1371.0, 1827.0, 750.0}), V({5, 7, 0}), 0, 0);
+	frik_createWaypoint(V({2357.0, 1987.0, 750.0}), V({6, 8, 0}), 0, 0);
+	frik_createWaypoint(V({2357.0, 2750.0, 750.0}), V({7, 9, 13}), 0, 0);
+	frik_createWaypoint(V({2358.0, 3853.0, 750.0}), V({8, 10, 0}), 0, 0);
+	frik_createWaypoint(V({1847.0, 3862.0, 750.0}), V({9, 11, 0}), 0, 0);
+	frik_createWaypoint(V({1502.0, 3539.0, 750.0}), V({10, 12, 0}), 0, 0);
+	frik_createWaypoint(V({1870.0, 3381.0, 750.0}), V({11, 0, 0}), 0, 0);
+	frik_createWaypoint(V({1345.0, 2743.0, 750.0}), V({8, 4, 0}), 0, 0);
+	frik_createWaypoint(V({620.0, 2287.0, 638.0}), V({3, 15, 16}), 20, 0);
+	frik_createWaypoint(V({-605.0, 2292.0, 638.0}), V({14, 20, 16}), 22, 0);
+	frik_createWaypoint(V({-4.0, 2919.0, 638.0}), V({14, 17, 20}), 15, 0);
+	frik_createWaypoint(V({-3.0, 3327.0, 702.0}), V({16, 18, 0}), 0, 0);
+	frik_createWaypoint(V({953.0, 3313.0, 702.0}), V({17, 19, 0}), 0, 0);
+	frik_createWaypoint(V({928.0, 3711.0, 702.0}), V({18, 0, 0}), 0, 0);
+	frik_createWaypoint(V({-3.0, 1677.0, 638.0}), V({16, 21, 15}), 14, 0);
+	frik_createWaypoint(V({-1.0, 1443.0, 638.0}), V({20, 44, 45}), 0, 0);
+	frik_createWaypoint(V({-995.0, 2289.0, 638.0}), V({15, 23, 43}), 0, 0);
+	frik_createWaypoint(V({-980.0, 2746.0, 638.0}), V({22, 0, 37}), 0, 0);
+	frik_createWaypoint(V({-970.0, 3016.0, 638.0}), V({23, 25, 0}), 0, 0);
+	frik_createWaypoint(V({-840.0, 3184.0, 638.0}), V({24, 26, 0}), 0, 0);
+	frik_createWaypoint(V({-1281.0, 3179.0, 750.0}), V({25, 104, 0}), 0, 0);
+	frik_createWaypoint(V({-689.0, 2988.0, 838.0}), V({104, 28, 30}), 0, 0);
+	frik_createWaypoint(V({-682.0, 1579.0, 838.0}), V({27, 0, 105}), 0, 0);
+	frik_createWaypoint(V({693.0, 1581.0, 838.0}), V({105, 30, 0}), 0, 0);
+	frik_createWaypoint(V({705.0, 2980.0, 838.0}), V({29, 27, 0}), 0, 0);
+	frik_createWaypoint(V({-11.0, 1445.0, 838.0}), V({105, 0, 32}), 33, 0);
+	frik_createWaypoint(V({576.0, 1332.0, 950.0}), V({31, 36, 0}), 98, 0);
+	frik_createWaypoint(V({-576.0, 1334.0, 950.0}), V({31, 34, 98}), 0, 0);
+	frik_createWaypoint(V({-577.0, 801.0, 950.0}), V({33, 35, 36}), 0, 0);
+	frik_createWaypoint(V({2.0, 739.0, 950.0}), V({34, 36, 0}), 0, 0);
+	frik_createWaypoint(V({593.0, 818.0, 950.0}), V({35, 32, 34}), 0, 0);
+	frik_createWaypoint(V({-1375.0, 2733.0, 750.0}), V({23, 38, 0}), 0, 0);
+	frik_createWaypoint(V({-2168.0, 2756.0, 750.0}), V({37, 39, 0}), 0, 0);
+	frik_createWaypoint(V({-2159.0, 1845.0, 750.0}), V({38, 40, 42}), 0, 0);
+	frik_createWaypoint(V({-2422.0, 1832.0, 750.0}), V({39, 41, 0}), 0, 0);
+	frik_createWaypoint(V({-2580.0, 2046.0, 750.0}), V({40, 0, 0}), 0, 0);
+	frik_createWaypoint(V({-1356.0, 1837.0, 750.0}), V({39, 43, 0}), 0, 0);
+	frik_createWaypoint(V({-947.0, 1835.0, 638.0}), V({22, 42, 0}), 0, 0);
+	frik_createWaypoint(V({576.0, 1335.0, 430.0}), V({21, 46, 45}), 0, 0);
+	frik_createWaypoint(V({-576.0, 1336.0, 430.0}), V({21, 46, 44}), 0, 0);
+	frik_createWaypoint(V({1.0, 992.0, 430.0}), V({45, 44, 47}), 0, 0);
+	frik_createWaypoint(V({2.0, 801.0, 430.0}), V({46, 48, 0}), 0, 0);
+	frik_createWaypoint(V({190.0, 704.0, 430.0}), V({47, 49, 0}), 0, 0);
+	frik_createWaypoint(V({188.0, 386.0, 328.0}), V({48, 50, 0}), 0, 0);
+	frik_createWaypoint(V({-199.0, -397.0, 328.0}), V({49, 51, 0}), 0, 0);
+	frik_createWaypoint(V({-178.0, -691.0, 430.0}), V({50, 52, 0}), 0, 0);
+	frik_createWaypoint(V({8.0, -809.0, 430.0}), V({51, 53, 0}), 0, 0);
+	frik_createWaypoint(V({-2.0, -980.0, 430.0}), V({52, 54, 56}), 0, 0);
+	frik_createWaypoint(V({-576.0, -1334.0, 430.0}), V({53, 55, 56}), 0, 0);
+	frik_createWaypoint(V({-2.0, -1454.0, 638.0}), V({54, 56, 57}), 0, 0);
+	frik_createWaypoint(V({576.0, -1336.0, 430.0}), V({55, 53, 54}), 0, 0);
+	frik_createWaypoint(V({-1.0, -1668.0, 638.0}), V({55, 58, 60}), 59, 0);
+	frik_createWaypoint(V({639.0, -2286.0, 638.0}), V({57, 59, 60}), 64, 0);
+	frik_createWaypoint(V({10.0, -2920.0, 638.0}), V({58, 60, 57}), 61, 0);
+	frik_createWaypoint(V({-634.0, -2290.0, 638.0}), V({59, 57, 58}), 73, 0);
+	frik_createWaypoint(V({3.0, -3339.0, 702.0}), V({59, 62, 0}), 0, 0);
+	frik_createWaypoint(V({-916.0, -3346.0, 702.0}), V({61, 63, 0}), 0, 0);
+	frik_createWaypoint(V({-925.0, -3756.0, 702.0}), V({62, 0, 0}), 0, 0);
+	frik_createWaypoint(V({985.0, -2295.0, 638.0}), V({58, 65, 72}), 0, 0);
+	frik_createWaypoint(V({984.0, -1845.0, 638.0}), V({64, 66, 0}), 0, 0);
+	frik_createWaypoint(V({1346.0, -1836.0, 750.0}), V({65, 67, 0}), 0, 0);
+	frik_createWaypoint(V({2156.0, -1848.0, 750.0}), V({66, 68, 70}), 0, 0);
+	frik_createWaypoint(V({2390.0, -1850.0, 752.0}), V({67, 69, 0}), 0, 0);
+	frik_createWaypoint(V({2580.0, -2033.0, 750.0}), V({68, 0, 0}), 0, 0);
+	frik_createWaypoint(V({2150.0, -2743.0, 750.0}), V({67, 71, 0}), 0, 0);
+	frik_createWaypoint(V({1361.0, -2731.0, 750.0}), V({70, 72, 0}), 0, 0);
+	frik_createWaypoint(V({977.0, -2735.0, 638.0}), V({71, 64, 0}), 0, 0);
+	frik_createWaypoint(V({-963.0, -2284.0, 638.0}), V({60, 74, 79}), 0, 0);
+	frik_createWaypoint(V({-965.0, -2733.0, 638.0}), V({73, 75, 0}), 0, 0);
+	frik_createWaypoint(V({-1372.0, -2731.0, 750.0}), V({74, 76, 0}), 0, 0);
+	frik_createWaypoint(V({-2349.0, -2708.0, 750.0}), V({75, 77, 80}), 0, 0);
+	frik_createWaypoint(V({-2277.0, -1970.0, 750.0}), V({76, 78, 0}), 0, 0);
+	frik_createWaypoint(V({-1348.0, -1826.0, 750.0}), V({77, 79, 0}), 0, 0);
+	frik_createWaypoint(V({-1007.0, -1839.0, 638.0}), V({73, 78, 0}), 0, 0);
+	frik_createWaypoint(V({-2366.0, -3844.0, 750.0}), V({76, 81, 0}), 0, 0);
+	frik_createWaypoint(V({-1907.0, -3872.0, 750.0}), V({80, 82, 0}), 0, 0);
+	frik_createWaypoint(V({-1494.0, -3535.0, 750.0}), V({81, 83, 0}), 0, 0);
+	frik_createWaypoint(V({-1870.0, -3374.0, 750.0}), V({82, 0, 0}), 0, 0);
+	frik_createWaypoint(V({962.0, -3037.0, 638.0}), V({72, 85, 0}), 0, 0);
+	frik_createWaypoint(V({840.0, -3184.0, 638.0}), V({84, 101, 0}), 0, 0);
+	frik_createWaypoint(V({689.0, -2992.0, 838.0}), V({100, 87, 89}), 0, 0);
+	frik_createWaypoint(V({702.0, -1588.0, 838.0}), V({86, 107, 0}), 0, 0);
+	frik_createWaypoint(V({-700.0, -1575.0, 838.0}), V({107, 89, 0}), 0, 0);
+	frik_createWaypoint(V({-692.0, -2996.0, 838.0}), V({88, 86, 0}), 0, 0);
+	frik_createWaypoint(V({3.0, -1469.0, 838.0}), V({107, 0, 91}), 92, 0);
+	frik_createWaypoint(V({-576.0, -1329.0, 950.0}), V({90, 93, 94}), 0, 0);
+	frik_createWaypoint(V({576.0, -1337.0, 950.0}), V({90, 93, 96}), 0, 0);
+	frik_createWaypoint(V({-4.0, -1280.0, 950.0}), V({92, 91, 0}), 0, 0);
+	frik_createWaypoint(V({-584.0, -821.0, 950.0}), V({91, 95, 96}), 0, 0);
+	frik_createWaypoint(V({6.0, -720.0, 950.0}), V({94, 96, 0}), 0, 0);
+	frik_createWaypoint(V({576.0, -812.0, 950.0}), V({95, 94, 92}), 0, 0);
+	frik_createWaypoint(V({-1466.0, -2297.0, 670.0}), V({73, 0, 0}), 0, 0);
+	frik_createWaypoint(V({-4.0, 1267.0, 950.0}), V({32, 33, 0}), 0, 0);
+	frik_createWaypoint(V({-2.0, -1438.0, 950.0}), V({93, 0, 0}), 0, 0);
+	frik_createWaypoint(V({1282.0, -2996.0, 750.0}), V({86, 101, 0}), 0, 0);
+	frik_createWaypoint(V({1281.0, -3183.0, 750.0}), V({100, 85, 0}), 0, 0);
+	frik_createWaypoint(V({869.0, -3295.0, 638.0}), V({85, 0, 0}), 0, 0);
+	frik_createWaypoint(V({-857.0, 3325.0, 638.0}), V({25, 0, 0}), 0, 0);
+	frik_createWaypoint(V({-1281.0, 2985.0, 750.0}), V({26, 27, 0}), 0, 0);
+	frik_createWaypoint(V({0.0, 1595.0, 838.0}), V({31, 28, 29}), 0, 0);
+	frik_createWaypoint(V({-1.0, 1433.0, 950.0}), V({98, 0, 0}), 0, 0);
+	frik_createWaypoint(V({5.0, -1597.0, 838.0}), V({90, 88, 87}), 0, 0);
+}
+// End dump

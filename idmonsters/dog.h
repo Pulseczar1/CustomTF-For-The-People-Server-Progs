@@ -1,0 +1,107 @@
+#ifndef DOG_H
+#define DOG_H
+
+namespace Progs {
+
+void dog_leap1();
+void dog_run1();
+void dog_bite();
+void Dog_JumpTouch();
+void dog_stand1();
+void dog_stand2();
+void dog_stand3();
+void dog_stand4();
+void dog_stand5();
+void dog_stand6();
+void dog_stand7();
+void dog_stand8();
+void dog_stand9();
+void dog_walk1();
+void dog_walk2();
+void dog_walk3();
+void dog_walk4();
+void dog_walk5();
+void dog_walk6();
+void dog_walk7();
+void dog_walk8();
+void dog_run1();
+void dog_run2();
+void dog_run3();
+void dog_run4();
+void dog_run5();
+void dog_run6();
+void dog_run7();
+void dog_run8();
+void dog_run9();
+void dog_run10();
+void dog_run11();
+void dog_run12();
+void dog_atta1();
+void dog_atta2();
+void dog_atta3();
+void dog_atta4();
+void dog_atta5();
+void dog_atta6();
+void dog_atta7();
+void dog_atta8();
+void dog_leap1();
+void dog_leap2();
+void dog_leap3();
+void dog_leap4();
+void dog_leap5();
+void dog_leap6();
+void dog_leap7();
+void dog_leap8();
+void dog_leap9();
+void dog_pain1();
+void dog_pain2();
+void dog_pain3();
+void dog_pain4();
+void dog_pain5();
+void dog_pain6();
+void dog_painb1();
+void dog_painb2();
+void dog_painb3();
+void dog_painb4();
+void dog_painb5();
+void dog_painb6();
+void dog_painb7();
+void dog_painb8();
+void dog_painb9();
+void dog_painb10();
+void dog_painb11();
+void dog_painb12();
+void dog_painb13();
+void dog_painb14();
+void dog_painb15();
+void dog_painb16();
+void dog_pain(entity attacker, float damage);
+void dog_die1();
+void dog_die2();
+void dog_die3();
+void dog_die4();
+void dog_die5();
+void dog_die6();
+void dog_die7();
+void dog_die8();
+void dog_die9();
+void dog_dieb1();
+void dog_dieb2();
+void dog_dieb3();
+void dog_dieb4();
+void dog_dieb5();
+void dog_dieb6();
+void dog_dieb7();
+void dog_dieb8();
+void dog_dieb9();
+void dog_die();
+float CheckDogMelee();
+float CheckDogJump();
+float DogCheckAttack();
+float DogOnSight();
+void monster_dog();
+
+} // END namespace Progs
+
+#endif // END DOG_H
+

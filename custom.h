@@ -1,0 +1,108 @@
+#ifndef CUSTOM_H
+#define CUSTOM_H
+
+namespace Progs {
+
+void DropToCustomClassGen();
+void DropFromCustomClassGen();
+void PrintMoney();
+void PrintRefund(float in);
+void PrintNotEnoughMoney(float in);
+void BuyHealth( float type);
+void BuyWeapon(float cost, int item);
+void BuyCuTF(float cost, int item);
+void BuyItem(float cost, int item);
+void BuyJob(float cost, float type);
+void FragGrenadeTouch();
+void FragGrenadeExplode();
+void KracGrenadeTouch();
+void KracGrenadeExplode();
+void createBastard(entity bastard,float threshold);
+void makeImmune(entity immuner,float timer);
+void UseJobSkill();
+void DetonateAllGuns();
+float IsBuilding(entity tester);
+void autoteam_think();
+void spawn_tdeath(const vector& org, entity death_owner);
+void ThrowGib(const string& gibname, float dm, float makecool, float gibskin, float gibkgs, float randorg);
+void TeamFortress_SetHealth();
+void TeamFortress_SetEquipment();
+float W_BestWeapon();
+void W_SetCurrentAmmo();
+void TeamFortress_SetSpeed(entity p);
+void TeamFortress_SetSkin(entity p);
+void TeamFortress_PrintJobName(entity Viewer, float pc);
+void BecomeExplosion();
+void T_RadiusDamage(entity bomb, entity attacker, float rad, entity ignore);
+void SUB_regen();
+void W_FireMedikit(float inAuto);
+void TeamFortress_ID(float inAuto);
+void TeamFortress_Scan(float range,float inAuto);
+void kill_my_demons();
+void player_assaultcannondown1();
+void Reset_Grapple(entity rhook);
+void GuerillaExplode();
+void TeamFortress_DetpackStop(float krac);
+void TeamFortress_TeamShowScores(float all, float teamscored, float scorepoints);
+void execute_changelevel();
+//void tfgoalitem_RemoveFromPlayer(entity Item, entity AP, float method);
+void DetonateMines(entity mine_owner);
+string TeamGetNiceColor(float tno);
+void SetArmyTimer(entity player, float start);
+void RemoveArmyTimer();
+entity SelectSpawnPoint();
+void CleanUpEverything();
+void FieldEvent(entity tfield, const vector& where, entity thing);
+float GiveFreeStuff(entity player);
+void SetMeatUsage(entity player, float usage);
+void SetHeadsUsage(entity player, float usage);
+void SetCurrentSoul(entity player, float soul);
+void PlayerDropRunes(entity player);
+void ResetStripedAndGiven(entity player);
+bool Teammate(entity a, entity b, bool aIsFakeEnt = false, bool bIsFakeEnt = false);
+bool Teammate(float num, entity b);
+bool Teammate(entity a, float num);
+bool Teammate(float numA, float numB);
+bool areFamilyMembers(entity a, entity b);
+void BuyStockClassItems( float stockClass);
+void DropToCustomClassGen();
+void spawn_tfog(const vector& org);
+void DropFromCustomClassGen();
+void PrintMoney();
+void PrintRefund(float in);
+void PrintNotEnoughMoney(float cost);
+float countshells(float item);
+float countnails(float item);
+float countrockets(float item);
+float countcells(float item);
+float GetHPCost(float numitem);
+void BuyHealth( float type);
+void BuyWeapon(float cost, int item);
+void BuyCuTF(float cost, int item);
+void Apply_Item_Ammo(int item);
+void BuyItem(float cost, int item);
+void BuyJob(float cost, float type);
+void BuyExtra(float cost1, float cost2);
+void BuyGren(float cost, float type);
+void fragspike_touch();
+void FragSpikeThink();
+void FragGrenadeTouch();
+void FragGrenadeExplode();
+void KracGrenadeTouch();
+float COOP_IsCoopMonster(entity test);
+void KracGrenadeExplode();
+void makeImmune(entity immuner,float timeimmune);
+void BastardTimer();
+void createBastard(entity bastard,float threshold);
+void Autoitem_think();
+void custom_lay();
+void DetonateAllGuns();
+void DetonateAllGunsForced();
+float IsBuilding(entity tester);
+void UpdateWeaponItems();
+float CanBuyItem(float inp);
+float ItemIsFree(float inp);
+
+} // END namespace Progs
+
+#endif // END CUSTOM_H

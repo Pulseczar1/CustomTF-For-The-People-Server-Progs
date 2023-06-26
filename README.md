@@ -1,2 +1,2 @@
-# CustomTF-For-The-People
-This is the mod code ("progs") that the CustomTF For The People server uses. CustomTF is a mod of Quake Team Fortress, which gives players the ability to customize their classes.
+# CustomTF-For-The-People-Server-Progs
+This is the mod code ("progs") that the CustomTF For The People (4TP) server uses. CustomTF is a mod of Quake Team Fortress, which gives players the ability to customize their player class/loadout. This code requires a server engine with certain "built-in" functions, and with the ability to link with this code, and run it, without using the QuakeC virtual machine. The 4TP server engine code is not being made public at this time. This code is very sloppy and unfinished in some areas -- not in the state I would prefer it to be in, to be made public, but I'm making it public anyway.

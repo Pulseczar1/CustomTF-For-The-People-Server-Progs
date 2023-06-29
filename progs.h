@@ -10,9 +10,9 @@
 #include <math.h>
 
 #include "progdefs.h"    // for interfacing /out/ to the engine
-#include "../pr_cmds.h"  // for interfacing /in/ from the engine  (for engine built-in functions)
-//#include "../progs.h"  // for access to engine data structures
-#include "../qwsvdef.h"  // for access to engine data structures (initially, this was to get progs.h)
+#include "cpqw/server/pr_cmds.h"  // for interfacing /in/ from the engine  (for engine built-in functions)
+//#include "cpqw/server/progs.h"  // for access to engine data structures
+#include "cpqw/server/qwsvdef.h"  // for access to engine data structures (initially, this was to get progs.h)
 
 enum {X, Y, Z}; // for vector elements
 

@@ -1,12 +1,8 @@
-ENGINE_DIR=../
-CLIENT_DIR=../../client
-PROGS_DIR=./
+PROGS_TOPLEVEL=.
 
-include $(ENGINE_DIR)makefile.inc
+include makefile.inc
 
-#CFLAGS	= $(PRJCFLAGS) -I..
-#OBJLIBS	= ../libsub.a ../libsubsub.a
-PROGS_ARCHIVES = progs.a frikbot/frikbot.a idmonsters/idmonsters.a
+PROGS_ARCHIVES = $(SHAREDOBJECT) frikbot/frikbot.a idmonsters/idmonsters.a
 OBJS	= actions.o  coop_items.o  environ.o   jobs.o      progdefs.o  spectate.o  tforttm.o   \
           admin.o    cpstuff.o     field.o     medic.o     prozac.o    speed.o     tinker.o    \
           agr.o      crusader.o    fight.o     megatf.o    pyro.o      sprites.o   triggers.o  \
@@ -22,13 +18,14 @@ OBJS	= actions.o  coop_items.o  environ.o   jobs.o      progdefs.o  spectate.o  
 
 all : $(PROGS_ARCHIVES)
 
-# Whenever a file in frikbot or idmonsters is recompiled, progs.a has to be recreated in entirely, for some reason.
-# The following rule isn't working right. So, what I have done is just make it so that progs.a is always recreated,
+# Whenever a file in frikbot or idmonsters is recompiled, 4TP_Progs.so has to be recreated in entirely, for some reason.
+# The following rule isn't working right. So, what I have done is just make it so that 4TP_Progs.so is always recreated,
 # by deleting it first. Didn't work here. So, put it in the parent makefile.
-progs.a : $(OBJS) frikbot/frikbot.a idmonsters/idmonsters.a
-#	-rm -f progs.a
-	ar -rvT progs.a $?
-	ranlib progs.a
+$(SHAREDOBJECT) : $(OBJS) frikbot/frikbot.a idmonsters/idmonsters.a
+#	-rm -f $(SHAREDOBJECT)
+#	ar -rvT progs.a $?
+#	ranlib progs.a
+	g++ $(LDFLAGS) -shared -o $(SHAREDOBJECT) $^
 
 frikbot/frikbot.a : force_look
 	cd frikbot; make CFG=$(CFG)
@@ -37,7 +34,7 @@ idmonsters/idmonsters.a : force_look
 	cd idmonsters; make CFG=$(CFG)
 
 clean :
-	-rm -f *.o *.a
+	-rm -f *.o *.a $(SHAREDOBJECT)
 	cd frikbot; make clean
 	cd idmonsters; make clean
 
@@ -46,4 +43,4 @@ force_look :
 
 # Pattern Rule
 %.o: %.cpp
-	g++ $(CPPFLAGS) -I$(PROGS_DIR) -c $< -o $@
+	g++ $(CXXFLAGS) -I$(PROGS_TOPLEVEL) -c $< -o $@

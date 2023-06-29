@@ -4,8 +4,8 @@
 // offsets. Only variables and functions in these arrays will be accessible in this manner.  -Pulseczar
 // =============================================================================================================
 
-#include "qwsvdef.h"
-#include "../pr_cmds.h"  // for interfacing /in/ from the engine  (for engine built-in functions)
+#include "cpqw/server/qwsvdef.h"
+#include "cpqw/server/pr_cmds.h"  // for interfacing /in/ from the engine  (for engine built-in functions)
 
 // The following operator overloads allow math on vectors in the same way allowed in QuakeC.
 vector operator+(vector v1, const vector& v2)

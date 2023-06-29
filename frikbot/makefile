@@ -1,8 +1,6 @@
-ENGINE_DIR=../../
-CLIENT_DIR=../../../client
-PROGS_DIR=../
+PROGS_TOPLEVEL=..
 
-include $(ENGINE_DIR)makefile.inc
+include $(PROGS_TOPLEVEL)/makefile.inc
 
 #CFLAGS	= $(PRJCFLAGS) -I..
 #OBJLIBS	= ../libsub.a ../libsubsub.a
@@ -21,6 +19,6 @@ clean :
 
 # Pattern Rule
 %.o: %.cpp
-	g++ $(CPPFLAGS) -I$(PROGS_DIR) -c $< -o $@
+	g++ $(CXXFLAGS) -I$(PROGS_TOPLEVEL) -c $< -o $@
 	ar -rvT frikbot.a $*.o
 #	$(RM) $*.o

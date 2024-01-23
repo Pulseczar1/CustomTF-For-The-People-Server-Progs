@@ -255,7 +255,7 @@ void Sentry_Rotate()
 
 	self->heat = self->heat + 1;
 
-	#else // SENTRY_SMOOTHROTATION
+	#else // not SENTRY_SMOOTHROTATION
 
 	if (self->heat == 0)
 	{

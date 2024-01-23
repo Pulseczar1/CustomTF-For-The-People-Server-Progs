@@ -41,6 +41,14 @@ vector operator*(vector v, const double& d);         // scales `v` by `d`
 vector operator*(const double& d, vector v);         // scales `v` by `d`
 float operator*(const vector& va, const vector& vb); // dot product of `va` and `vb`
 
+// In C/C++, floating-point numbers have rounding errors associated with them, such that, for example, 5 could get stored
+// in memory as 4.999999996. Therefore, it's not good to ask whether two floating-point values are equal, since 5 doesn't
+// exactly equal 4.999999996; it's best to ask whether they are equal within a given tolerance. That's what this does:
+inline bool areEqualEnough(float f1, float f2, float tolerance)
+{
+	return fabs(f1 - f2) <= tolerance;
+}
+
 // This allows "if (!str)" and "if (!!str)". I don't recommend using it, since you can't use "if (str)".
 // Instead, use "if (str == "")" or "if (str.empty())". But it's here if you want it.
 bool operator!(const string& s);

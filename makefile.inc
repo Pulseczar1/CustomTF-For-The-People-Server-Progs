@@ -15,19 +15,19 @@ CLIENT_DIR=$(PROGS_TOPLEVEL)/../ServerEngine/cpqw/client
 ifeq ($(CFG),test_debug)
 CXXFLAGS=-std=c++11 -D_GLIBCXX_DEBUG -m32 -Wall -g -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs
 LDFLAGS=-std=c++11 -D_GLIBCXX_DEBUG -m32 -L$(ENGINE_DIR) -L$(CLIENT_DIR) -lm
-SHAREDOBJECT = 4TP_Progs.so
+SHAREDOBJECT=4TP_Progs.so
 
 # for test version, non-debug (but does include -g)
 else ifeq ($(CFG),test)
 CXXFLAGS=-std=c++11 -m32 -Wall -g -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs
 LDFLAGS=-std=c++11 -m32 -L$(ENGINE_DIR) -L$(CLIENT_DIR) -lm
-SHAREDOBJECT = 4TP_Progs.so
+SHAREDOBJECT=4TP_Progs.so
 
 # for release version that GDB can attach to
 else ifeq ($(CFG),debug)
 CXXFLAGS=-std=c++11 -m32 -Wall -g -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs
 LDFLAGS=-std=c++11 -m32 -L$(ENGINE_DIR) -L$(CLIENT_DIR) -lm
-SHAREDOBJECT = 4TP_Progs.so
+SHAREDOBJECT=4TP_Progs.so
 
 # for release version (no CFG option set; just entered 'make')
 else
@@ -35,5 +35,5 @@ else
 #crashes on all O levels, 1 to 6
 CXXFLAGS=-std=c++11 -m32 -Wall -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs
 LDFLAGS=-std=c++11 -m32 -L$(ENGINE_DIR) -L$(CLIENT_DIR) -lm
-SHAREDOBJECT = 4TP_Progs.so
+SHAREDOBJECT=4TP_Progs.so
 endif

@@ -12,6 +12,15 @@ namespace Progs {
 
 entity solidTestEntity;
 
+// PZ: It's so nice in C++ to be able to create data for players in places outside of entity fields.
+class ZGG_UserData
+{
+  public:
+	float playerYawWhileHoldingObjectLastFrame;
+};
+
+ZGG_UserData zggUserData[MAX_CLIENTS]; // For 32 possible players.
+
 /*
 ===============
 RemoveTestEntity
@@ -342,7 +351,7 @@ entity zg_findtarget(entity source)
 }
 
 //=======================
-// PZ NOTE: This mostly is responsible for performing necessary functions while ZGG is holding an object.
+// PZ NOTE: This mostly is responsible for performing necessary functions while a ZGG is holding an object.
 
 void zg_think()
 {
@@ -351,13 +360,17 @@ void zg_think()
 	user = self->owner;
 	theObject = self->owner->pickedupobject_hands;
 
+	// PZ: Added for being able to rotate objects with the ZGG.
+	//bprint(2, string("user entity number = ") + to_string(ENT_TO_NUM(user)) + "\n");
+	int userNdx = ENT_TO_NUM(user)-1;   // `world`'s entity number is 0. We don't include a slot for world in the data structure.
+
 	// remove onground flag
 	theObject->flags = theObject->flags - (theObject->flags & (PR_FL_ONGROUND | PR_FL_PARTIALGROUND));
 
 	// if the user doesn't have anything picked up then remove ourself
 	// FIXME: this should never happen, zg_drop should be the only thing that messes with theObject and removes the thinker
 	if (theObject == world)
-		remove (self);
+		remove(self);
 
 	if ( theObject->classname == "player" ) {
 		if ( theObject->gravity ) {
@@ -375,11 +388,11 @@ void zg_think()
 
 	// check if the user is dead
 	if (user->health <= 0 || (theObject->takedamage && theObject->health <= 0) || theObject->model == "" || !user->is_connected) {	// *
-		zg_drop (user, PR_FALSE);
+		zg_drop(user, PR_FALSE);
 		return;
 	}
 
-	makevectors (user->v_angle);
+	makevectors(user->v_angle);
 
 	// this is based upon the entity's size
 /*
@@ -396,6 +409,18 @@ void zg_think()
 
 	zg_movetowards(user, theObject, trace_endpos);
 
+	// PZ: Rotate the object on the yaw axis, as the player rotates.
+	//bprint(2, string("user->v_angle[YAW] - zggUserData[userNdx].playerYawWhileHoldingObjectLastFrame = ") +
+	//          to_string(user->v_angle[YAW] - zggUserData[userNdx].playerYawWhileHoldingObjectLastFrame) + "\n");
+	// NOTE: Sentry guns need to have their turret's yaw center rotated.
+	if (theObject->classname == "building_sentrygun")
+	{
+		theObject->waitmin += user->v_angle[YAW] - zggUserData[userNdx].playerYawWhileHoldingObjectLastFrame;
+		theObject->waitmax  = theObject->waitmin + PR_SENTRY_ROTATIONWIDTH * 2;
+	}
+	else
+		theObject->angles[YAW] += user->v_angle[YAW] - zggUserData[userNdx].playerYawWhileHoldingObjectLastFrame;
+
 	// PZ: Give the ZGG a sound.
 	if (time >= self->t_width) // `t_width` just holds a time for sound playing
 	{
@@ -404,6 +429,9 @@ void zg_think()
 	}
 
 	self->nextthink = time + 0.05;
+
+	// PZ: Remember the player's yaw angle for next frame.
+	zggUserData[userNdx].playerYawWhileHoldingObjectLastFrame = user->v_angle[YAW];
 }
 
 // PZ NOTE: `toss` seems to always be false with current code.
@@ -520,6 +548,10 @@ void zg_pickup(entity user)
 	entity thinker;
 	bool   objectIsSentryGun;
 
+	// PZ: Added for being able to rotate objects with the ZGG.
+	//bprint(2, string("user entity number = ") + to_string(ENT_TO_NUM(user)) + "\n");
+	int userNdx = ENT_TO_NUM(user)-1;   // `world`'s entity number is 0. We don't include a slot for world in the data structure.
+
 	trace_ent = zg_findtarget(user);
 
 	if (trace_ent == world)
@@ -617,6 +649,9 @@ else
 		}
 	}
 #endif
+
+	// PZ: Remember the yaw angle the player was looking when they picked up the object.
+	zggUserData[userNdx].playerYawWhileHoldingObjectLastFrame = user->v_angle[YAW];
 
 	// create the thinker
 	thinker = spawnServerSide(); // PZ: make it a server-side only entity

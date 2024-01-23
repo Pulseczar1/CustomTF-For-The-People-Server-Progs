@@ -42,7 +42,7 @@ namespace Progs {
 // PZ: This is now page 1 of the intro. I made it so that there are multiple pages.
 void PrintProzacMOTD()
 {
-	const float CURRENT_YEAR = 2022; // PZ: now we just have to update this date :)
+	const float CURRENT_YEAR = 2024; // PZ: now we just have to update this date :) (FIXME: get the current year from a standard library)
     string msgIntro, st, st2, st3, updates;
     float x;
 
@@ -101,11 +101,14 @@ void PrintProzacMOTD()
 	           "the sole purpose of running the\n"
 	           "Halloween map. Do not expect a bugless\n"
 	           "experience. Happy Halloween!\n\n";*/
-	             //1234567890123456789012345678901234567890   // PZ NOTE: For boxing strings at 40 characters in length, try padstr(str, 40).
-	updates =  S_("Dec 8, 2022:                           \n"
-	              "^bBots now default to skill level 3 and  \n"
-	              "more quickly adjust their skill level  \n"
-	              "to the skill of the human players.     ^b\n\n");
+	             // PZ NOTE: For boxing strings at 40 characters in length, try padstr(str, 40). Either, the server,
+	             // client, or both will just chop off all characters on a line, after the 40th character.
+	             //1234567890123456789012345678901234567890
+	updates =  S_("Jan 17, 2024:                           \n"
+	              "^bThe default bot count was lowered. These\n"
+	              "bots seem more fun when they supplement,\n"
+	              "rather than dominate, a game. Use       \n"
+	              "`^bvotebot^b` if you prefer more bots.^b      \n\n");
 
 	st3     =  S_("Press '^9' to continue to the next page\n");
 
@@ -134,13 +137,16 @@ A lot of things were changed. This list will only include things that I think pl
 
 void PrintProzacMOTD_Page2()
 {                                //1234567890123456789012345678901234567890
-	string heading =           S_("^8: Prev Page    ^9: Next Page    ^0: Skip\n\n");
-	centerprint(self, heading, S_("October 2016:                          \n"
-	                              "^bThis server is finally running entirely\n"
-	                              "in C++ (no QuakeC). Expect glitches.   \n"
-	                              "Please report glitches to -^bPulse^bczar^b-^b. \n"
+	string heading =           S_("^8: Prev Page    ^9: Next Page    ^0: Skip \n\n");
+	centerprint(self, heading, S_("Dec 8, 2022:                            \n"
+	                              "^bBots now default to skill level 3 and   \n"
+	                              "more quickly adjust their skill level   \n"
+	                              "to the skill of the human players.^b      \n"
 	                              "\n"
-	                              "\n"
+	                              "October 2016:                           \n"
+	                              "^bThis server is finally running entirely \n"
+	                              "in C++ (no QuakeC). Expect glitches.    \n"
+	                              "Please report glitches to -^bPulse^bczar^b-^b.  \n"
 	                              "\n"
 	                              "\n"
 	                              "\n"

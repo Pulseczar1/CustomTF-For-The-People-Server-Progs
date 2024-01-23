@@ -1297,7 +1297,11 @@ void TeamFortress_FinishedBuilding()
 		newmis->yaw_speed = 10;	//Turn rate
 		newmis->heat = 0;	// Turn Right
 		newmis->angles[X] = 0;
-		newmis->angles[Y] = ceil(oldself->angles[Y]); //CH remove decimal
+		// PZ: Why have we been having the sentry gun built pointed at the owner all of these years?? I added `+ 180`.
+		//     Not sure what the purpose of ceil() here is, either. Why not have the sentry gun directly face where the
+		//     engineer is looking? .angles might actually be more accurate than .v_angle, too.
+		//newmis->angles[Y] = ceil(oldself->angles[Y]); //CH remove decimal  (PZ: original line)
+		newmis->angles[Y] = oldself->angles[Y] + 180;   //CH remove decimal
 		newmis->angles[Z] = 0;
 
 		newmis->angles[Y] = ((ceil(newmis->angles[Y] / 10)) * 10); //CH set last int to 0

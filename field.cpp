@@ -606,150 +606,159 @@ void Field_touch()
 
 void Create_Field(entity gen1, entity gen2)
 {
-    // Check for existing force field, and abort if any
-    if (gen1->has_sensor || gen2->has_sensor)
-        return;
+	// Check for existing force field, and abort if any
+	if (gen1->has_sensor || gen2->has_sensor)
+		return;
 
-    if (gen1->martyr_enemy != world || gen2->martyr_enemy != world) // 2nd CHECK
-        return;
+	if (gen1->martyr_enemy != world || gen2->martyr_enemy != world) // 2nd CHECK
+		return;
 
-    // already checked b4 on CanLink -> CanIdle
-    /*if (!IsValidFieldGen(gen1) || !IsValidFieldGen(gen2))
-        return;*/
+	// already checked b4 on CanLink -> CanIdle
+	/*if (!IsValidFieldGen(gen1) || !IsValidFieldGen(gen2))
+		return;*/
 
-    gen1->has_holo = PR_FIELDGEN_ISENABLED;
-    gen2->has_holo = PR_FIELDGEN_ISENABLED;
+	gen1->has_holo = PR_FIELDGEN_ISENABLED;
+	gen2->has_holo = PR_FIELDGEN_ISENABLED;
 
-    gen1->has_sensor = PR_TRUE;
-    gen2->has_sensor = PR_TRUE;
+	gen1->has_sensor = PR_TRUE;
+	gen2->has_sensor = PR_TRUE;
 
-    entity tfield;
+	entity tfield;
 
-    // generate field
-    tfield = spawn();  // PZ: don't see a model getting set for this; might could get away with it being a server-only entity
-    tfield->classname = "force_field";
-    tfield->owner = world;
-    tfield->real_owner = gen1->real_owner; // --> player
+	// generate field
+	tfield = spawn();  // PZ: don't see a model getting set for this; might could get away with it being a server-only entity
+	tfield->classname = "force_field";
+	tfield->owner = world;
+	tfield->real_owner = gen1->real_owner; // --> player
 
-    tfield->think = Field_think;
-    tfield->touch = Field_touch;
-    tfield->nextthink = time + 0.25;
+	tfield->think = Field_think;
+	tfield->touch = Field_touch;
+	tfield->nextthink = time + 0.25;
 
-    // set pos and size
-    tfield->origin = gen1->origin + V({0, 0, 32});
-    tfield->absmin[Z] = gen1->origin[Z] - 32;
-    tfield->absmax[Z] = gen1->origin[Z] + 32;
+	// set pos and size
+	tfield->origin = gen1->origin + V({0, 0, 32});
+	tfield->absmin[Z] = gen1->origin[Z] - 32;
+	tfield->absmax[Z] = gen1->origin[Z] + 32;
 
-    tfield->mins[Z] = 0 - 32;
-    tfield->maxs[Z] = 32;
-    tfield->size[Z] = 64;
+	tfield->mins[Z] = 0 - 32;
+	tfield->maxs[Z] = 32;
+	tfield->size[Z] = 64;
 
-    float diff;
+	float diff;
 
-    if (gen1->origin[X] == gen2->origin[X])
-    {
-        tfield->cnt = 0;
+	if (gen1->origin[X] == gen2->origin[X])
+	{
+		tfield->cnt = 0;
 
-        tfield->origin[X] = gen1->origin[X];
-        tfield->absmin[X] = gen1->origin[X] - 2;
-        tfield->absmax[X] = gen1->origin[X] + 2;
+		tfield->origin[X] = gen1->origin[X];
+		tfield->absmin[X] = gen1->origin[X] - 2;
+		tfield->absmax[X] = gen1->origin[X] + 2;
 
-        tfield->maxs[X] = 2;
-        tfield->mins[X] = 0 - 2;
-        tfield->size[X] = 4;
+		tfield->maxs[X] = 2;
+		tfield->mins[X] = 0 - 2;
+		tfield->size[X] = 4;
 
-        if (gen1->origin[Y] > gen2->origin[Y])
-        {
-            diff = (gen1->origin[Y] - gen2->origin[Y])/2;
+		if (gen1->origin[Y] > gen2->origin[Y])
+		{
+			diff = (gen1->origin[Y] - gen2->origin[Y])/2;
 
-            tfield->origin[Y] = gen1->origin[Y] - diff;
-            tfield->absmin[Y] = gen2->origin[Y];
-            tfield->absmax[Y] = gen1->origin[Y];
+			tfield->origin[Y] = gen1->origin[Y] - diff;
+			tfield->absmin[Y] = gen2->origin[Y];
+			tfield->absmax[Y] = gen1->origin[Y];
 
-            tfield->maxs[Y] = diff;
-            tfield->mins[Y] = 0 - diff;
-            tfield->size[Y] = diff * 2;
-        }
-        else
-        {
-            diff = (gen2->origin[Y] - gen1->origin[Y])/2;
+			tfield->maxs[Y] = diff;
+			tfield->mins[Y] = 0 - diff;
+			tfield->size[Y] = diff * 2;
+		}
+		else
+		{
+			diff = (gen2->origin[Y] - gen1->origin[Y])/2;
 
-            tfield->origin[Y] = gen2->origin[Y] - diff;
-            tfield->absmin[Y] = gen1->origin[Y];
-            tfield->absmax[Y] = gen2->origin[Y];
+			tfield->origin[Y] = gen2->origin[Y] - diff;
+			tfield->absmin[Y] = gen1->origin[Y];
+			tfield->absmax[Y] = gen2->origin[Y];
 
-            tfield->maxs[Y] = diff;
-            tfield->mins[Y] = 0 - diff;
-            tfield->size[Y] = diff * 2;
-        }
-    }
-    else
-    {
-        tfield->cnt = 1;
+			tfield->maxs[Y] = diff;
+			tfield->mins[Y] = 0 - diff;
+			tfield->size[Y] = diff * 2;
+		}
+	}
+	else
+	{
+		tfield->cnt = 1;
 
-        tfield->origin[Y] = gen1->origin[Y];
-        tfield->absmin[Y] = gen1->origin[Y] - 2;
-        tfield->absmax[Y] = gen1->origin[Y] + 2;
+		tfield->origin[Y] = gen1->origin[Y];
+		tfield->absmin[Y] = gen1->origin[Y] - 2;
+		tfield->absmax[Y] = gen1->origin[Y] + 2;
 
-        tfield->maxs[Y] = 2;
-        tfield->mins[Y] = 0 - 2;
-        tfield->size[Y] = 4;
+		tfield->maxs[Y] = 2;
+		tfield->mins[Y] = 0 - 2;
+		tfield->size[Y] = 4;
 
-        if (gen1->origin[X] > gen2->origin[X])
-        {
-            diff = (gen1->origin[X] - gen2->origin[X])/2;
+		if (gen1->origin[X] > gen2->origin[X])
+		{
+			diff = (gen1->origin[X] - gen2->origin[X])/2;
 
-            tfield->origin[X] = gen1->origin[X] - diff;
-            tfield->absmin[X] = gen2->origin[X];
-            tfield->absmax[X] = gen1->origin[X];
+			tfield->origin[X] = gen1->origin[X] - diff;
+			tfield->absmin[X] = gen2->origin[X];
+			tfield->absmax[X] = gen1->origin[X];
 
-            tfield->maxs[X] = diff;
-            tfield->mins[X] = 0 - diff;
-            tfield->size[X] = diff * 2;
+			tfield->maxs[X] = diff;
+			tfield->mins[X] = 0 - diff;
+			tfield->size[X] = diff * 2;
 
-        }
-        else
-        {
-            diff = (gen2->origin[X] - gen1->origin[X])/2;
+		}
+		else
+		{
+			diff = (gen2->origin[X] - gen1->origin[X])/2;
 
-            tfield->origin[X] = gen2->origin[X] - diff;
-            tfield->absmin[X] = gen1->origin[X];
-            tfield->absmax[X] = gen2->origin[X];
+			tfield->origin[X] = gen2->origin[X] - diff;
+			tfield->absmin[X] = gen1->origin[X];
+			tfield->absmax[X] = gen2->origin[X];
 
-            tfield->maxs[X] = diff;
-            tfield->mins[X] = 0 - diff;
-            tfield->size[X] = diff * 2;
-        }
-    }
+			tfield->maxs[X] = diff;
+			tfield->mins[X] = 0 - diff;
+			tfield->size[X] = diff * 2;
+		}
+	}
 
-    // apply stuff
-    tfield->movetype = PR_MOVETYPE_NONE;
-    tfield->solid = PR_SOLID_BBOX;
-    setsize(tfield, tfield->mins, tfield->maxs);
-    setorigin(tfield, tfield->origin);
+	// apply stuff
+	tfield->movetype = PR_MOVETYPE_NONE;
+	tfield->solid = PR_SOLID_BBOX;
+	setsize(tfield, tfield->mins, tfield->maxs);
+	setorigin(tfield, tfield->origin);
 
-    // assign the pointers on the field generators
-    gen1->martyr_enemy = tfield;
-    gen2->martyr_enemy = tfield;
+	// assign the pointers on the field generators
+	gen1->martyr_enemy = tfield;
+	gen2->martyr_enemy = tfield;
 
-    // assign the pointers to generators on ourselves
-    tfield->demon_one = gen1;
-    tfield->demon_two = gen2;
+	// assign the pointers to generators on ourselves
+	tfield->demon_one = gen1;
+	tfield->demon_two = gen2;
 
-    // make activation sound
-    sound (tfield, PR_CHAN_VOICE, "misc/ffact.wav", 0.2, PR_ATTN_NORM);
+	// make activation sound
+	sound (tfield, PR_CHAN_VOICE, "misc/ffact.wav", 0.2, PR_ATTN_NORM);
 
-    // initialize sound flags on field
-    tfield->has_sensor = PR_FALSE;
-    tfield->has_holo = PR_FALSE;
+	// initialize sound flags on field
+	tfield->has_sensor = PR_FALSE;
+	tfield->has_holo = PR_FALSE;
 
-    // flash generators
-    gen1->effects = PR_EF_DIMLIGHT | PR_EF_RED;
-    gen1->has_teleporter = PR_TRUE;
-    gen1->skin = 2;
-    gen2->effects = PR_EF_DIMLIGHT | PR_EF_RED;
-    gen2->has_teleporter = PR_TRUE;
-    gen2->skin = 2;
+    // PZ: Make the generators rotate so that they "face" each other. This is important now that I've made it so that you
+    // can rotate objects with the ZGG. If you move a generator and it gets rotated in the process, and you place it down
+    // in a location where it can link with its sibling, the two need to face each other.
+	if (!areEqualEnough(gen1->angles[YAW], gen2->angles[YAW], 0.1))
+	{
+		vector newAngles = vectoangles(gen1->origin - gen2->origin);
+		gen1->angles[YAW] = gen2->angles[YAW] = newAngles[YAW];
+	}
+
+	// flash generators
+	gen1->effects = PR_EF_DIMLIGHT | PR_EF_RED;
+	gen1->has_teleporter = PR_TRUE;
+	gen1->skin = 2;
+	gen2->effects = PR_EF_DIMLIGHT | PR_EF_RED;
+	gen2->has_teleporter = PR_TRUE;
+	gen2->skin = 2;
 }
 
 //=================================================================

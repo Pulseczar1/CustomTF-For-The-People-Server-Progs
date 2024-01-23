@@ -294,7 +294,7 @@ namespace Progs {
 
 #define PR_SENTRY_SMOOTHROTATION
 #define PR_SENTRY_ROTATIONSTEPS  36
-#define PR_SENTRY_ROTATIONWIDTH  50
+#define PR_SENTRY_ROTATIONWIDTH  50   // PZ NOTE: This is half the turret's rotation width, in degrees.
 
 #define PR_INTERMISSION_LENFORCED  10 // Minimum seconds an intermission will last, Original was 5
 

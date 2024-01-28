@@ -605,13 +605,15 @@ void zg_pickup(entity user)
 		//force_retouch = 2;		// make sure even still objects get hit // PZ: Testing
 	}
 
-	trace_ent->pickedupby = user;                              // * for knowing if it's picked up
-	trace_ent->flags = trace_ent->flags - PR_FL_ONGROUND;      // *
+	// PZ: The following two lines that remove FL_ONGROUND were assuming that the flag is set. Added `trace_ent->flags &`.
+	//     One problem this fixed was bots not attacking sentry guns after sentry guns are picked up by the ZGG, due to FL_MACHINE being cleared by this code.
+	trace_ent->pickedupby = user;                           // * for knowing if it's picked up
+	trace_ent->flags -= trace_ent->flags & PR_FL_ONGROUND;  // *
 	// PZ: Let's make it so that if this is the sentry gun, that its base/stand is also moved with the top/turret.
 	if (objectIsSentryGun)
 	{
 		trace_ent->trigger_field->pickedupby = user;
-		trace_ent->trigger_field->flags = trace_ent->trigger_field->flags - PR_FL_ONGROUND;
+		trace_ent->trigger_field->flags -= trace_ent->trigger_field->flags & PR_FL_ONGROUND;
 	}
 
 	// fire the onpickup event on the theObject

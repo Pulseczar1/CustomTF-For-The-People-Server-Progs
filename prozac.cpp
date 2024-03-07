@@ -43,8 +43,8 @@ namespace Progs {
 void PrintProzacMOTD()
 {
 	const float CURRENT_YEAR = 2024; // PZ: now we just have to update this date :) (FIXME: get the current year from a standard library)
-    string msgIntro, st, st2, st3, updates;
-    float x;
+	string msgIntro, st, st2, st3, updates;
+	float x;
 
 	// PZ: I'm making this easier to read, rather than using the defines above.
 	// PZ NOTE: the standard client has a max width of 40 characters for CenterPrint(), and 1024 total characters
@@ -65,7 +65,7 @@ void PrintProzacMOTD()
 	           "an awesome guide for the creation of\n"
 	           "these bots\n\n");
 
-    //st = "Celebrating �� years of CustomTF!!\n\n";
+	//st = "Celebrating �� years of CustomTF!!\n\n";
 	x = CURRENT_YEAR - 1998; // PZ: according to http://wiki.quakeworld.nu/CustomTF, version 1.0 of CustomTF was released on 6/3/98 (June 3rd?).
 	st = "Celebrating ";
 	st2 = ftos(x);
@@ -73,18 +73,18 @@ void PrintProzacMOTD()
 	st = strcat(st, st2);
 	st = strcat(st, " years of CustomTF!!\n\n");
 
-    if ((self->PR_cprint_fx & 3) == 3)
-        st = colstr(st,PR_COLSTR_MIX1);
-    else if (self->PR_cprint_fx & 2)
-        st = colstr(st,PR_COLSTR_RED);
-    else if (self->PR_cprint_fx & 1)
-        st = colstr(st,PR_COLSTR_MIX2);
+	if ((self->PR_cprint_fx & 3) == 3)
+		st = colstr(st,PR_COLSTR_MIX1);
+	else if (self->PR_cprint_fx & 2)
+		st = colstr(st,PR_COLSTR_RED);
+	else if (self->PR_cprint_fx & 1)
+		st = colstr(st,PR_COLSTR_MIX2);
 
 	// PZ
-    st2 = S_("\nPress '^0' to skip\n\n\n");
-    x = floor(time);
-    if (x - (2 * floor(x / 2)) == 0) // x mod 2 == 0
-        st2 = colstr(st2, PR_COLSTR_RED);
+	st2 = S_("\nPress '^0' to skip\n\n\n");
+	x = floor(time);
+	if (x - (2 * floor(x / 2)) == 0) // x mod 2 == 0
+		st2 = colstr(st2, PR_COLSTR_RED);
 
 //	           "\{141} Complete \boverhaul\b of bot AI is in\n"
 //	           "\{141} the works... \bComing soon!\b        \n\n";
@@ -126,13 +126,13 @@ A lot of things were changed. This list will only include things that I think pl
 */
 
 
-    //CenterPrint5(self,#MSG_INTRO,#MSG_INTRO2,#MSG_INTRO3,st,st2);
+	//CenterPrint5(self,#MSG_INTRO,#MSG_INTRO2,#MSG_INTRO3,st,st2);
 	CenterPrint5(self, msgIntro, st, st2, updates, st3);
 
 	// PZ: people sometimes complain that their number keys don't work; number keys are crucial to CuTF; so let's make sure they work
 	stuffcmd(self, "bind 1 \"impulse 1\"; bind 2 \"impulse 2\"; bind 3 \"impulse 3\"; bind 4 \"impulse 4\"; bind 5 \"impulse 5\"; bind 6 \"impulse 6\"; bind 7 \"impulse 7\"; bind 8 \"impulse 8\"; bind 9 \"impulse 9\"; bind 0 \"impulse 10\"\n");
 
-    self->PR_cprint_fx = self->PR_cprint_fx + 1;
+	self->PR_cprint_fx = self->PR_cprint_fx + 1;
 }
 
 void PrintProzacMOTD_Page2()

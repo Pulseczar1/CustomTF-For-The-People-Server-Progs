@@ -1761,7 +1761,7 @@ void frik_engageTheEnemy()
 					{
 						//if ((trace_ent.team_no == self.team_no && teamplay) || coop)                  // PZ: TF uses .team_no rather than .team
 						// PZ: try not to hit enemies disguised as our teammate, too
-						float isTeammateOrDisguisedAsTeammate;                isTeammateOrDisguisedAsTeammate = PR_FALSE;
+						float isTeammateOrDisguisedAsTeammate = PR_FALSE;
 						if      (Teammate(self->team_no, trace_ent->team_no))         isTeammateOrDisguisedAsTeammate = PR_TRUE;
 						else if (Teammate(self->team_no, trace_ent->undercover_team)) isTeammateOrDisguisedAsTeammate = PR_TRUE;
 

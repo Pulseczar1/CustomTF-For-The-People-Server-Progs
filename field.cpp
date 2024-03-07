@@ -743,9 +743,9 @@ void Create_Field(entity gen1, entity gen2)
 	tfield->has_sensor = PR_FALSE;
 	tfield->has_holo = PR_FALSE;
 
-    // PZ: Make the generators rotate so that they "face" each other. This is important now that I've made it so that you
-    // can rotate objects with the ZGG. If you move a generator and it gets rotated in the process, and you place it down
-    // in a location where it can link with its sibling, the two need to face each other.
+	// PZ: Make the generators rotate so that they "face" each other. This is important now that I've made it so that you
+	// can rotate objects with the ZGG. If you move a generator and it gets rotated in the process, and you place it down
+	// in a location where it can link with its sibling, the two need to face each other.
 	if (!areEqualEnough(gen1->angles[YAW], gen2->angles[YAW], 0.1))
 	{
 		vector newAngles = vectoangles(gen1->origin - gen2->origin);

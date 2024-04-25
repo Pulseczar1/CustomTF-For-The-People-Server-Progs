@@ -1014,8 +1014,7 @@ void Sentry_Touch()
 		// Gizmo - allow non demons and non army soldiers to be affected (coop monsters)
 		if (IsMonster(other))
 		{
-			float temp;
-
+			//float temp;
 			//temp = GetTeam( other );
 			if (!Teammate(other, self->real_owner))
 			{

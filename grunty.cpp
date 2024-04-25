@@ -26,6 +26,10 @@
 
 namespace Progs {
 
+// Field replacements:
+// .has_teleporter        grunt dodging state
+enum Dodge { NONE = 0, LEFT = -1, RIGHT = 1, JUMP = 2, BACK = 3 };
+
 /* ALREADY DEFINED IN ARMY.QC
 
 #define WAYPOINT_TYPE_PRIMARY       0
@@ -287,7 +291,7 @@ void grunty_run()
 	Grunty_Check_Frags();
 }
 
-void stand_frames() //- ofn - used when soldier is following us, and when hes stuck and set to not jump
+void stand_frames() //- ofn - used when soldier is following us, and when he's stuck and set to not jump
 {
 	self->weaponframe=0;
 
@@ -816,7 +820,7 @@ void GruntyScanTargets()
 				self->demon_one = world;
 			}
 
-			self->has_teleporter = 0;
+			self->has_teleporter = Dodge::NONE;
 			self->effects = self->effects - (self->effects & PR_EF_DIMLIGHT);
 			return;
 		}
@@ -847,7 +851,7 @@ void GruntyScanTargets()
 				self->enemy = world;
 				self->goalentity = ReturnEasyWaypoint(self, self);
 
-				self->has_teleporter = 0;
+				self->has_teleporter = Dodge::NONE;
 				self->effects = self->effects - (self->effects & PR_EF_DIMLIGHT);
 
 				return;
@@ -867,7 +871,7 @@ void GruntyScanTargets()
 				self->goalentity = self->demon_one;
 				self->search_time = time + PR_GRUNTY_SEEKTIME; // was 8
 				//- OfN -
-				self->has_teleporter = 0;
+				self->has_teleporter = Dodge::NONE;
 			}
 			else if (self->search_time <= time) // we seeked enemy for GRUNTY_SEEKTIME already so...
 			{
@@ -1583,27 +1587,27 @@ void GRun()
 	}
 
 	/* - OfN -if (self.enemy.classname == "monster_shambler" || self.enemy.weapons_carried & #WEAP_ASSAULT_CANNON)
-		if (self.has_teleporter == 0)
-			self.has_teleporter = 3;*/
+		if (self.has_teleporter == Dodge::NONE)
+			self.has_teleporter = Dodge::BACK;*/
 
 	if (random() < 0.02) // to prevent us from strafing or whatever forever.
-		self->has_teleporter = 0;
+		self->has_teleporter = Dodge::NONE;
 
 	// Test to see if we want to do an evasive maneuver
 	// If we're already doing a move, don't do another
-	if (self->has_teleporter == -1) // left dodge move
+	if (self->has_teleporter == Dodge::LEFT) // left dodge move
 	{
 		// Gizmo - if blocked while doing strafe do another move
 		if ( !botmovedist( vectoyaw( v_right * -1 ), dist ) )	// move left
-			self->has_teleporter = 0;
+			self->has_teleporter = Dodge::NONE;
 	}
-	else if (self->has_teleporter == 1) // right dodge move
+	else if (self->has_teleporter == Dodge::RIGHT) // right dodge move
 	{
 		// Gizmo - if blocked while doing strafe do another move
 		if ( !botmovedist( vectoyaw( v_right ), dist ) )	// move right
-			self->has_teleporter = 0;
+			self->has_teleporter = Dodge::NONE;
 	}
-	else if (self->has_teleporter == 2) // jump!
+	else if (self->has_teleporter == Dodge::JUMP) // jump!
 	{
 		if (self->flags & PR_FL_ONGROUND) // only jump if we're on the ground
 		{
@@ -1611,9 +1615,9 @@ void GRun()
 			//sound (self, #CHAN_BODY, "player/plyrjmp8.wav", 1, #ATTN_NORM);
 			sound (self, PR_CHAN_VOICE, "player/plyrjmp8.wav", 1, PR_ATTN_NORM);
 		}
-		self->has_teleporter = 0; // don't jump
+		self->has_teleporter = Dodge::NONE; // don't jump
 	}
-	else if (self->has_teleporter == 3) //(backwards)// HE'S AFTER US, RUN!@#$ HE WILL KILL US ALL!!@
+	else if (self->has_teleporter == Dodge::BACK) //(backwards)// HE'S AFTER US, RUN!@#$ HE WILL KILL US ALL!!@
 	{
 		if ( !botmovedist( vectoyaw( v_forward ), dist * -1 ) ) { // flee, I tell you!
 			// Gizmo - if he's blocked while trying to run backwards with preferred range, then strafe
@@ -1621,14 +1625,14 @@ void GRun()
 				// check if preferred range is set
 				if ( self->is_malfunctioning != 2 && self->delay_time ) {
 					if ( random() < 0.5 )
-						self->has_teleporter = 1;
+						self->has_teleporter = Dodge::RIGHT;
 					else
-						self->has_teleporter = -1;
+						self->has_teleporter = Dodge::LEFT;
 				}
 			}
 		}
 	}
-	else if (self->has_teleporter == 0) // no evasive, standard move (forward)
+	else if (self->has_teleporter == Dodge::NONE) // no evasive, standard move (forward)
 	{
 		botmovedist(vectoyaw(v_forward), dist); // move
 
@@ -1645,20 +1649,20 @@ void GRun()
 
 				if ( self->delay_time == 1 ) {
 					if ( r >= 200 ) {
-						self->has_teleporter = 0;
+						self->has_teleporter = Dodge::NONE;
 						return;
 					}
 				} else if ( self->delay_time == 2 ) {
 					if ( r >= 1100 ) {
-						self->has_teleporter = 0;
+						self->has_teleporter = Dodge::NONE;
 						return;
 					} else if ( r < 400 ) {
-						self->has_teleporter = 3;
+						self->has_teleporter = Dodge::BACK;
 						return;
 					}
 				} else if ( self->delay_time == 3 ) {
 					if ( r < 800 ) {
-						self->has_teleporter = 3;
+						self->has_teleporter = Dodge::BACK;
 						return;
 					}
 				}
@@ -1666,13 +1670,13 @@ void GRun()
 			if (random() * 20 < 1 ) {					// if we get a score of one on a d20, special
 				r = random();
 				if (r < 0.25)
-					self->has_teleporter = -1; // left
+					self->has_teleporter = Dodge::LEFT; // left
 				else if (r < 0.5)
-					self->has_teleporter = 1; // right
+					self->has_teleporter = Dodge::RIGHT; // right
 				else if (r < 0.75)
-					self->has_teleporter = 2; // jump!
+					self->has_teleporter = Dodge::JUMP; // jump!
 				else
-					self->has_teleporter = 3; // italian style!
+					self->has_teleporter = Dodge::BACK; // Italian style!
 			}
 		}
 	}
@@ -1772,7 +1776,7 @@ float botmovedist(float angle, float dist)
 
 			if (self->has_cheated > time)
 				return PR_FALSE;
-			self->has_teleporter = 0; // abort dodging
+			self->has_teleporter = Dodge::NONE; // abort dodging
 			makevectors(self->angles);
 			// First, we'll see if jumping would be suitable
 			if ( !obstacleMode ) { // Gizmo - only jump if we've decided to

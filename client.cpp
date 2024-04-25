@@ -2919,9 +2919,10 @@ WaterMove
 */
 FIELD(".float	dmgtime;")
 
+// PZ NOTE: This, for the most part, gives the player damage and sound effects involved with being in liquids.
 void WaterMove()
 {
-//	RPrint (ftos(self.waterlevel));
+	//RPrint(ftos(self.waterlevel));
 	if (self->movetype == PR_MOVETYPE_NOCLIP)
 		return;
 	if (self->health < 0)
@@ -2931,6 +2932,7 @@ void WaterMove()
 		return;
 
 	//WK Poison attacks
+	// PZ NOTE: Handle drowning while gassed or tranquilized.
 	if (self->tfstate & (PR_TFSTATE_HALLUCINATING | PR_TFSTATE_TRANQUILISED))
 	{
 		if (self->air_finished < time)
@@ -2948,6 +2950,7 @@ void WaterMove()
 			}
 		}
 	}
+	// PZ NOTE: Leave the drowning state by putting your head above water.
 	else if (self->waterlevel != 3)
 	{
 		if (self->air_finished < time)
@@ -2957,6 +2960,7 @@ void WaterMove()
 		self->air_finished = time + 12;
 		self->dmg = 2;
 	}
+	// PZ NOTE: You are in the normal drowning state.
 	else if (self->air_finished < time)
 	{	// drown!
 		if (self->pain_finished < time)
@@ -2968,7 +2972,7 @@ void WaterMove()
 			self->pain_finished = time + 1;
 		}
 	}
-
+	// PZ NOTE: Handle coming out of the water whether drowning or not.
 	if (!self->waterlevel)
 	{
 		if (self->flags & PR_FL_INWATER)
@@ -2984,6 +2988,7 @@ void WaterMove()
 		return;
 	}
 
+	// PZ NOTE: Handle hurting the player as a result of being in lava or slime.
 	if (self->watertype == PR_CONTENT_LAVA)
 	{	// do damage
 		if (self->dmgtime < time)
@@ -3007,6 +3012,7 @@ void WaterMove()
 		}
 	}
 
+	// PZ NOTE: Handle entering the water.
 	if ( !(self->flags & PR_FL_INWATER) )
 	{
 		// player enter water sound
@@ -3032,6 +3038,7 @@ void WaterMove()
 #endif
 }
 
+// PZ NOTE: This seems to help the player get out of the water/liquid.
 void CheckWaterJump()
 {
 	vector start, end;

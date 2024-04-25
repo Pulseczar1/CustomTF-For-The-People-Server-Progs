@@ -239,10 +239,11 @@ void UpdateInfos(float startup)
 	else if (army_delay > 60) army_delay = 60; //the allowed maximum
 #endif
 
-	st = infokey(world, "allow_watermonsters"); //
-	if (st == "1" || st =="on" || mapname == "frontlin") //
+	allow_watermonsters = 1; // PZ: default to allow
+	st = infokey(world, "allow_watermonsters");
+	if      (st == "1" || st == "on" || mapname == "frontlin")
 		allow_watermonsters = 1;
-	else
+	else if (st == "0" || st == "off")
 		allow_watermonsters = 0;
 
 	st = infokey(world, "spec_menu"); //

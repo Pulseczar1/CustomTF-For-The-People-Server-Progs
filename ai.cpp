@@ -319,8 +319,7 @@ float AI_Check_Contents(entity test)
                     //T_Damage (self, world, world, 4*self.waterlevel);
                     //TF_T_Damage (self, world, world, (self.health - 1), 0, #TF_TD_IGNOREARMOUR);
 
-
-                    if (self->ltime > time - 4) //- OfN - if it felt just after summon
+                    if (self->ltime > time - 4) //- OfN - if it fell in just after summon
                     {
                         bprint(PR_PRINT_MEDIUM,self->real_owner->netname);
                         bprint(PR_PRINT_MEDIUM," teleports his soldier to the water\n");
@@ -337,7 +336,6 @@ float AI_Check_Contents(entity test)
                     self->health = -1; //nomore soldiers in water
                     MonsterDie(self);
                     //custom_grunt_die();
-
                 }
             }
             //else if (self.classname == "monster_shambler")

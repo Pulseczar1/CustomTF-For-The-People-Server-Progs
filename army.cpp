@@ -20,14 +20,16 @@
 #include "tforttm.h"
 #include "neo.h"
 
+#define PR_ARMY_TEST  // PZ: Testing grunts. COMMENT THIS LATER.
+
 namespace Progs {
 
 /*================================================================================
 
-ARMY RATING/PRESTIGE IS CLACULATED WITH:
+ARMY RANK/RATING IS CALCULATED WITH:
 ----------------------------------------
 
-AverageTeamScore When started beeing army player
+AverageTeamScore When started being army player
 
 
 EXPLANATION OF HOW THE ENTITY FIELDS ARE USED (thnx? np.. :P)
@@ -37,7 +39,7 @@ Entity fields used for player:
 ------------------------------
 
 .dont_do_triggerwork - Army rating, its a float: 0 = 0%  1 = 100%
-.else_goal			 - Difference between player frags and average of his team when started beeing army guy
+.else_goal			 - Difference between player frags and average of his team when started being army guy
 
 =================================================================================*/
 
@@ -1171,8 +1173,8 @@ float TeleSoldier(float slot)
 	newmis->last_saveme_sound = 0; // ? oh that
 
 	newmis->touch = grunty_touch; //-OfN-
-	newmis->has_holo = time+2;		// touch messages delay
-	newmis->is_detpacking=1;			// resets engage enemy to "yes"
+	newmis->has_holo = time + 2;		// touch messages delay
+	newmis->is_detpacking = 1;			// resets engage enemy to "yes"
 	newmis->is_toffingadet = 2;		// Gizmo - start with "auto" mode
 
 	if (slot == 0)
@@ -1184,13 +1186,13 @@ float TeleSoldier(float slot)
 
 	newmis->max_health = newmis->health;
 
-	newmis->ltime=time; // trhown or felt on water?
+	newmis->ltime = time; // thrown/fell in water?
 
-	newmis->martyr_enemy=world;
-	newmis->demon_one=world;
-	newmis->demon_two=world;
+	newmis->martyr_enemy = world;
+	newmis->demon_one = world;
+	newmis->demon_two = world;
 
-	sprint(self,PR_PRINT_HIGH,"You teleport your soldier.\n");
+	sprint(self,PR_PRINT_HIGH, "You teleport your soldier.\n");
 	//PrintFromSoldier(self.demon_one,self,"Your orders?\n");
 
 	newmis->PR_monsterflag = PR_STRFLAG_MONSTER; // flag to identify monsters/army for sentry targetting
@@ -1279,7 +1281,7 @@ entity GetArmyTimer(entity player)
 	while (te != world)
 	{
 		if (te->owner == player)
-		  return te;
+			return te;
 
 		te = find(te, "classname", "army_timer");
 	}
@@ -1293,7 +1295,7 @@ entity GetArmyTimer(entity player)
 void RemoveArmyTimer()
 {
 	entity te;
-	te=GetArmyTimer(self);
+	te = GetArmyTimer(self);
 	if (te!=world)
 		dremove(te);
 }

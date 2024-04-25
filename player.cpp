@@ -1316,7 +1316,7 @@ void SetHeads(entity player, float numheads);
 
 void head_touch()
 {
-    if (self->velocity == V({0, 0, 0})) // stoped?
+    if (self->velocity == V({0, 0, 0})) // stopped?
     {
         self->avelocity = V({0, 0, 0});
 

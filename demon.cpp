@@ -98,12 +98,13 @@ void demon1_stand13() {FRAME_STATE(CuTF_DemonFrames::FR_STAND13, demon1_stand1);
 //WK Speeds doubled
 #define PR_DEMON_WALKFACTOR 1.25
 
-void demon1_walk1() {
-FRAME_STATE(CuTF_DemonFrames::FR_WALK1, demon1_walk2);
-Demon_Water_Jump();
-if (random() < 0.2)
-    sound (self, PR_CHAN_VOICE, "demon/idle1.wav", 1, PR_ATTN_IDLE);
-ai_walk(8*PR_DEMON_WALKFACTOR); //8
+void demon1_walk1()
+{
+	FRAME_STATE(CuTF_DemonFrames::FR_WALK1, demon1_walk2);
+	Demon_Water_Jump();
+	if (random() < 0.2)
+		sound(self, PR_CHAN_VOICE, "demon/idle1.wav", 1, PR_ATTN_IDLE);
+	ai_walk(8*PR_DEMON_WALKFACTOR); //8
 }
 void demon1_walk2() {FRAME_STATE(CuTF_DemonFrames::FR_WALK2, demon1_walk3); ai_walk(6*PR_DEMON_WALKFACTOR);} //6
 void demon1_walk3() {FRAME_STATE(CuTF_DemonFrames::FR_WALK3, demon1_walk4); ai_walk(6*PR_DEMON_WALKFACTOR);} //6
@@ -179,10 +180,11 @@ void demon1_jump10() {
 	}
 	self->nextthink = time + 0.1;
 }
-void demon1_jump13() {
-FRAME_STATE(CuTF_DemonFrames::FR_LEAP10, demon1_jump10);
-Demon_Water_Jump();
-self->nextthink = time + 0.02;
+void demon1_jump13()
+{
+	FRAME_STATE(CuTF_DemonFrames::FR_LEAP10, demon1_jump10);
+	Demon_Water_Jump();
+	self->nextthink = time + 0.02;
 }
 
 
@@ -638,7 +640,7 @@ void Demon_Water_Jump()
 	{
 		ai_face();
 		//self.touch = SUB_Null;
-        self->touch = MonsterTouch; // OfN
+		self->touch = MonsterTouch; // OfN
 		self->think = demon1_jump4;
 		self->has_tesla = PR_TRUE; //Landed in water
 		self->nextthink = time + 0.1;

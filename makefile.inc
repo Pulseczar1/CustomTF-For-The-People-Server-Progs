@@ -13,7 +13,7 @@ CLIENT_DIR=$(PROGS_TOPLEVEL)/../ServerEngine/cpqw/client
 # Test version with debug symbols
 ifeq ($(CFG),test)
   $(info Configuring compilation for the Debug configuration)
-  CXXFLAGS=-std=c++11 -m32 -Wall -g -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs
+  CXXFLAGS=-std=c++11 -m32 -Wall -g -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs -Wno-misleading-indentation
   LDFLAGS=-std=c++11 -m32 -g -L$(ENGINE_DIR) -L$(CLIENT_DIR) -lm
   SHAREDOBJECT=4TP_Progs.so
 
@@ -22,7 +22,7 @@ ifeq ($(CFG),test)
 # ERROR CHECKING, THAT MAY AFFECT PERFORMANCE.
 else ifeq ($(CFG),test_with_debug_libs)
   $(info Configuring compilation for the Debug configuration, with debug C++ libraries)
-  CXXFLAGS=-std=c++11 -D_GLIBCXX_DEBUG -m32 -Wall -g -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs
+  CXXFLAGS=-std=c++11 -D_GLIBCXX_DEBUG -m32 -Wall -g -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs -Wno-misleading-indentation
   LDFLAGS=-std=c++11 -D_GLIBCXX_DEBUG -m32 -g -L$(ENGINE_DIR) -L$(CLIENT_DIR) -lm
   SHAREDOBJECT=4TP_Progs.so
 
@@ -31,7 +31,7 @@ else
   $(info Configuring compilation for the Release configuration)
   #-fomit-frame-pointer -fno-strength-reduce -O6
   #crashes on all O levels, 1 to 6
-  CXXFLAGS=-std=c++11 -m32 -Wall -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs
+  CXXFLAGS=-std=c++11 -m32 -Wall -I$(ENGINE_DIR) -I$(CLIENT_DIR) -Wno-trigraphs -Wno-misleading-indentation
   LDFLAGS=-std=c++11 -m32 -L$(ENGINE_DIR) -L$(CLIENT_DIR) -lm
   SHAREDOBJECT=4TP_Progs.so
 endif

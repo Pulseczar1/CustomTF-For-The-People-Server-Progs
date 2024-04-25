@@ -2024,7 +2024,7 @@ void frik_mainRoutine()
 
 	// if players voted for a different value, use it
 	if (botVoteMenuData[CURRENT].idealNumPlayers != 255) num = botVoteMenuData[CURRENT].idealNumPlayers;
-	int idealNumPlayers = num; // for use way down below
+	//int idealNumPlayers = num; // for use way down below
 
 	// PZ: Using num_clients here so that we can take downloaders into account and allow up to 31 bots at a time.
 	//     num_players doesn't take into account downloaders. Make sure we always have an open slot for a player to join,

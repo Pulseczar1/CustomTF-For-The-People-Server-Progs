@@ -209,6 +209,14 @@ void UpdateInfos(float startup)
 		localcmd("localinfo agr \"\"\n"); localcmd("localinfo invade \"\"\n");
 		localcmd("serverinfo agr \"\"\n"); localcmd("serverinfo invade \"\"\n");
 	}
+	if (neo.isModeActive() && (invade || agr))
+	{
+		localcmd("say \"Silly admin enabled Neo Mode and Invade or AGR mode at the same time. Disabling all three.\"\n");
+		agr = invade = 0;
+		localcmd("localinfo agr \"\"\n");    localcmd("serverinfo agr \"\"\n");
+		localcmd("localinfo invade \"\"\n"); localcmd("serverinfo invade \"\"\n");
+		localcmd("localinfo neo \"\"\n");    localcmd("serverinfo neo \"\"\n");
+	}
 
 	st = infokey(world, "army_delay"); //
 #ifdef PR_COOP_MODE_ENHANCED

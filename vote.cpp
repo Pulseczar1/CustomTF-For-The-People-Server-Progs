@@ -1752,6 +1752,7 @@ float CheckVoting(float final)
 			{
 				localcmd("localinfo agr 1\n");
 				localcmd("localinfo invade \"\"\n");
+				localcmd("localinfo neo \"\"\n");
 				if (coop)
 					localcmd("localinfo _voted_coop 0\n");
 				if (!deathmatch)
@@ -1761,6 +1762,7 @@ float CheckVoting(float final)
 			{
 				localcmd("localinfo invade 1\n");
 				localcmd("localinfo agr \"\"\n");
+				localcmd("localinfo neo \"\"\n");
 				if (coop)
 					localcmd("localinfo _voted_coop 0\n");
 				if (!deathmatch)
@@ -1769,6 +1771,8 @@ float CheckVoting(float final)
 			else if (current_voteent->group_no == PR_VOTEMAP_NEO)
 			{
 				localcmd("localinfo neo 1\n");
+				localcmd("localinfo invade \"\"\n");
+				localcmd("localinfo agr \"\"\n");
 				if (coop)
 					localcmd("localinfo _voted_coop 0\n");
 				if (!deathmatch)
@@ -1779,6 +1783,7 @@ float CheckVoting(float final)
 			else if ( current_voteent->group_no == PR_VOTEMAP_TF ) {
 				localcmd("localinfo agr \"\"\n");    // PZ - make sure AGR is going to be off
 				localcmd("localinfo invade \"\"\n"); // PZ - make sure Invade is going to be off
+				localcmd("localinfo neo \"\"\n");
 				if ( coop )
 					localcmd( "localinfo _voted_coop 0\n" );
 				if ( !deathmatch )
@@ -1786,6 +1791,7 @@ float CheckVoting(float final)
 			} else if ( current_voteent->group_no == PR_VOTEMAP_COOP ) {
 				localcmd("localinfo agr \"\"\n");    // PZ - make sure AGR is going to be off
 				localcmd("localinfo invade \"\"\n"); // PZ - make sure Invade is going to be off
+				localcmd("localinfo neo \"\"\n");
 				if ( !coop || coop == 3 )
 					localcmd( "localinfo _voted_coop 1\n" );
 				if ( deathmatch )
@@ -1793,6 +1799,7 @@ float CheckVoting(float final)
 			} else if ( current_voteent->group_no == PR_VOTEMAP_INSANECOOP ) {
 				localcmd("localinfo agr \"\"\n");    // PZ - make sure AGR is going to be off
 				localcmd("localinfo invade \"\"\n"); // PZ - make sure Invade is going to be off
+				localcmd("localinfo neo \"\"\n");
 				if ( coop != 3 )
 					localcmd( "localinfo _voted_coop 3\n" );
 				if ( deathmatch )
@@ -1846,6 +1853,7 @@ float CheckVoting(float final)
 			{
 				localcmd("localinfo agr 1\n");
 				localcmd("localinfo invade \"\"\n");
+				localcmd("localinfo neo \"\"\n");
 				if (coop)
 					localcmd("localinfo _voted_coop 0\n");
 				if (!deathmatch)
@@ -1855,6 +1863,7 @@ float CheckVoting(float final)
 			{
 				localcmd("localinfo invade 1\n");
 				localcmd("localinfo agr \"\"\n");
+				localcmd("localinfo neo \"\"\n");
 				if (coop)
 					localcmd("localinfo _voted_coop 0\n");
 				if (!deathmatch)
@@ -1863,6 +1872,8 @@ float CheckVoting(float final)
 			else if (current_voteent->group_no == PR_VOTEMAP_NEO)
 			{
 				localcmd("localinfo neo 1\n");
+				localcmd("localinfo invade \"\"\n");
+				localcmd("localinfo agr \"\"\n");
 				if (coop)
 					localcmd("localinfo _voted_coop 0\n");
 				if (!deathmatch)
@@ -1872,6 +1883,7 @@ float CheckVoting(float final)
 			else if ( current_voteent->group_no == PR_VOTEMAP_TF ) {
 				localcmd("localinfo agr \"\"\n");    // PZ - make sure AGR is going to be off
 				localcmd("localinfo invade \"\"\n"); // PZ - make sure Invade is going to be off
+				localcmd("localinfo neo \"\"\n");
 				if ( coop )
 					localcmd( "localinfo _voted_coop 0\n" );
 				if ( !deathmatch )
@@ -1879,6 +1891,7 @@ float CheckVoting(float final)
 			} else if ( current_voteent->group_no == PR_VOTEMAP_COOP ) {
 				localcmd("localinfo agr \"\"\n");    // PZ - make sure AGR is going to be off
 				localcmd("localinfo invade \"\"\n"); // PZ - make sure Invade is going to be off
+				localcmd("localinfo neo \"\"\n");
 				if ( !coop || coop == 3 )
 					localcmd( "localinfo _voted_coop 1\n" );
 				if ( deathmatch )
@@ -1886,6 +1899,7 @@ float CheckVoting(float final)
 			} else if ( current_voteent->group_no == PR_VOTEMAP_INSANECOOP ) {
 				localcmd("localinfo agr \"\"\n");    // PZ - make sure AGR is going to be off
 				localcmd("localinfo invade \"\"\n"); // PZ - make sure Invade is going to be off
+				localcmd("localinfo neo \"\"\n");
 				if ( coop != 3 )
 					localcmd( "localinfo _voted_coop 3\n" );
 				if ( deathmatch )

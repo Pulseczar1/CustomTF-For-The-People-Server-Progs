@@ -237,11 +237,11 @@ void door_touch()
 	if (self->owner->attack_finished > time)
 		return;
 
-    // OfN - Dont let doors go for invalid players
-    if (other->done_custom & PR_CUSTOM_BUILDING) // skip ppl customizing
-        return;
-    if (other->playerclass == PR_PC_UNDEFINED) // skip observers
-        return;
+	// OfN - Dont let doors go for invalid players
+	if (other->done_custom & PR_CUSTOM_BUILDING) // skip ppl customizing
+		return;
+	if (other->playerclass == PR_PC_UNDEFINED) // skip observers
+		return;
 
 	if (!Activated(self,other))
 	{

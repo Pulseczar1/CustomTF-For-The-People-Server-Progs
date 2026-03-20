@@ -25,7 +25,7 @@ choosing next weapon, and all impulse commands.
 #include "menu.h"
 #include "sbitems.h"
 #include "vote.h"
-#include "vote2.h"
+#include "votebot.h"
 #include "neo.h"
 
 namespace Progs {
@@ -5692,7 +5692,7 @@ void DeadImpulses()
 	}
 	else if (self->impulse == PR_IMPULSE_VOTEBOT) // PZ: for "votebot"
 	{
-		Player_VoteBot();
+		voteBot.Player_VoteBot();
 	}
 	else if (self->impulse == PR_IMPULSE_VOTEYES)
 	{
@@ -6373,56 +6373,57 @@ HIP_FireLaser
 void HIP_FireLaser(float stat)
 {
 	vector org;
-   vector dir;
-   vector out;
-   float ofs;
-   float aofs;
+	vector dir;
+	vector out;
+	float ofs;
+	float aofs;
 
-   if (!self->PR_BUTTON_FIRE)
-   {
-	  player_run ();
-	  return;
-   }
-   if (self->ammo_cells < 1)
-   {
+	if (!self->PR_BUTTON_FIRE)
+	{
+		player_run ();
+		return;
+	}
+	if (self->ammo_cells < 1)
+	{
 		self->weapon = W_BestWeapon ();
 		W_SetCurrentAmmo ();
 		return;
-   }
-
-   SuperDamageSound();
-   muzzleflash();
-   makevectors (self->v_angle);
-
-   ofs = 6;
-   out = v_forward;
-   out[Z] = 0;
-   out = normalize(out);
-   org = self->origin + ((12-ofs) * v_up) + (12*out);
-//	 org = self.origin + (1*v_forward);
-   dir = aim (self, 1000);
-   aofs = ofs * 0.707;
-   if (stat == 0)
-   {
-	  self->currentammo = self->ammo_cells = self->ammo_cells - 1;
-	  //org = org + (aofs*v_right);
-	  org = org - (aofs*v_up);
-	  HIP_LaunchLaser(org, dir, 0);
-	  //org = org - (2*aofs*v_right);
-	  //HIP_LaunchLaser(org, dir, 0);
-   }
-   else if (stat == 1)
-   {
-	  self->currentammo = self->ammo_cells = self->ammo_cells - 1;
-	  org = org + (ofs*v_up);
-	  //if (random()<0.1)
-	// {
-	// HIP_LaunchLaser(org, dir, 1);
-	// newmis.dmg = 25;
-	// }
-	  //else
-	  HIP_LaunchLaser(org, dir, 0);
 	}
+
+	SuperDamageSound();
+	muzzleflash();
+	makevectors (self->v_angle);
+
+	ofs = 6;
+	out = v_forward;
+	out[Z] = 0;
+	out = normalize(out);
+	org = self->origin + ((12-ofs) * v_up) + (12*out);
+	//org = self.origin + (1*v_forward);
+	dir = aim (self, 1000);
+	aofs = ofs * 0.707;
+	if (stat == 0)
+	{
+		self->currentammo = self->ammo_cells = self->ammo_cells - 1;
+		//org = org + (aofs*v_right);
+		org = org - (aofs*v_up);
+		HIP_LaunchLaser(org, dir, 0);
+		//org = org - (2*aofs*v_right);
+		//HIP_LaunchLaser(org, dir, 0);
+	}
+	else if (stat == 1)
+	{
+		self->currentammo = self->ammo_cells = self->ammo_cells - 1;
+		org = org + (ofs*v_up);
+		//if (random()<0.1)
+		//{
+		//	HIP_LaunchLaser(org, dir, 1);
+		//	newmis.dmg = 25;
+		//}
+		//else
+		HIP_LaunchLaser(org, dir, 0);
+	}
+	
 	msg_entity = self;
 	WriteByte (PR_MSG_ONE, PR_SVC_SMALLKICK);
 

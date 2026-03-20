@@ -1,9 +1,10 @@
 // Created by Pulseczar on Oct 24, 2016.
 // I created this file because my new vote menus were making an already large file (vote.cpp),
 // into a much larger file.
+// TODO: Create a similar menu for more general options, like timelimit, fraglimit, etc. ("VoteGen")
 
 #include "progs.h"
-#include "vote2.h"
+#include "votebot.h"
 #include "vote.h"
 #include "menu.h"
 #include "optimize.h"
@@ -12,40 +13,21 @@
 
 namespace Progs {
 
-// PZ: This array holds the data for the bot vote menu.
-// Index 0 is the default data (normal settings).
-// Index 1 to 32 (or MAX_CLIENTS) are for each player's current uncommitted values while in the menu.
-// Index 33 to 64 (depending on MAX_CLIENTS) are for each player's committed values while in the menu.
-// Index 65 to 96 (depending on MAX_CLIENTS) are flags that indicate whether the user entered the value, themselves.
-// Index 97 (depending on MAX_CLIENTS) holds the current data in use in the game.
-//const unsigned int VOTEBOTDATALEN = MAX_CLIENTS * 3 + 2;
-BotVoteMenuData botVoteMenuData[VOTEBOTDATALEN];
+VoteBot voteBot;
 
-// =======================
-// BEGIN VOTEGEN FUNCTIONS
-// =======================
-// TODO
-// =======================
-// END VOTEGEN FUNCTIONS
-// =======================
-
-// =======================
-// BEGIN VOTEBOT FUNCTIONS
-// =======================
-
-// PZ: Clears the votebot settings on map load.
-void initVoteBotMenuData()
+// PZ: Clears the votebot settings. Generally done on map load.
+void VoteBot::initVoteBotMenuData()
 {
-    for (int i = DEFAULTS + 1; i < VOTEBOTDATALEN; i++)
-		copyVoteBotData(DEFAULTS, i, PR_VOTEBOT_MENU_MAIN);
+	for (unsigned int i = DEFAULT + 1; i < VOTEBOTDATALEN; i++)
+		copyVoteBotData(DEFAULT, i, PR_VOTEBOT_MENU_MAIN);
 }
 
-// PZ: Helper function, for votebot menu. Used to copy an entire BotVoteMenuData structure from one index
-//     to another. Index DEFAULTS means default settings. CURRENT means current settings.
+// PZ: Helper function, for votebot menu. Used to copy an entire VoteBotMenuData structure from one index
+//     to another. Index DEFAULT means default settings. CURRENT means current settings voted into being.
 // `from` and `to` : indexes
 // `menu` : only this menu and submenus are changed
 // `alsoCopyToCommittedData` : when used on player data, also copies to their committed data
-void copyVoteBotData(int from, int to, int menu, bool alsoCopyToCommittedData /*= false*/)
+void VoteBot::copyVoteBotData(int from, int to, int menu, bool alsoCopyToCommittedData /*= false*/)
 {
 	switch (menu)
 	{
@@ -59,64 +41,64 @@ void copyVoteBotData(int from, int to, int menu, bool alsoCopyToCommittedData /*
 		}
 		case PR_VOTEBOT_MENU_BOTCOUNT:
 		{
-			botVoteMenuData[to].idealNumPlayers = botVoteMenuData[from].idealNumPlayers;
+			voteBotMenuData[to].idealNumPlayers = voteBotMenuData[from].idealNumPlayers;
 			for (int i = 0; i < 4; i++)
-				botVoteMenuData[to].percentPlyrsPerTeam[i] = botVoteMenuData[from].percentPlyrsPerTeam[i];
-			botVoteMenuData[to].forceHumansToTeam = botVoteMenuData[from].forceHumansToTeam;
+				voteBotMenuData[to].percentPlyrsPerTeam[i] = voteBotMenuData[from].percentPlyrsPerTeam[i];
+			voteBotMenuData[to].forceHumansToTeam = voteBotMenuData[from].forceHumansToTeam;
 		}
 		case PR_VOTEBOT_MENU_BOTSKILL:
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				botVoteMenuData[to].botMinSkillLevel[i]    = botVoteMenuData[from].botMinSkillLevel[i];
-				botVoteMenuData[to].botMaxSkillLevel[i]    = botVoteMenuData[from].botMaxSkillLevel[i];
-				botVoteMenuData[to].botLockedSkillLevel[i] = botVoteMenuData[from].botLockedSkillLevel[i];
+				voteBotMenuData[to].botMinSkillLevel[i]    = voteBotMenuData[from].botMinSkillLevel[i];
+				voteBotMenuData[to].botMaxSkillLevel[i]    = voteBotMenuData[from].botMaxSkillLevel[i];
+				voteBotMenuData[to].botLockedSkillLevel[i] = voteBotMenuData[from].botLockedSkillLevel[i];
 			}
 		}
 		case PR_VOTEBOT_MENU_BOTSKILL_SUB1:
 		{
-			int i = botVoteMenuData[to].menuTeamSelected;
-			botVoteMenuData[to].botMinSkillLevel[i]    = botVoteMenuData[from].botMinSkillLevel[i];
-			botVoteMenuData[to].botMaxSkillLevel[i]    = botVoteMenuData[from].botMaxSkillLevel[i];
-			botVoteMenuData[to].botLockedSkillLevel[i] = botVoteMenuData[from].botLockedSkillLevel[i];
+			int i = voteBotMenuData[to].menuTeamSelected;
+			voteBotMenuData[to].botMinSkillLevel[i]    = voteBotMenuData[from].botMinSkillLevel[i];
+			voteBotMenuData[to].botMaxSkillLevel[i]    = voteBotMenuData[from].botMaxSkillLevel[i];
+			voteBotMenuData[to].botLockedSkillLevel[i] = voteBotMenuData[from].botLockedSkillLevel[i];
 		}
 		case PR_VOTEBOT_MENU_BOTCLASSES:
 		{
 			for (int i = 0; i < 5; i++)
 			{
 				for (int j = 0; j < 10; j++)
-					botVoteMenuData[to].botClassPercentage[i][j] = botVoteMenuData[from].botClassPercentage[i][j];
+					voteBotMenuData[to].botClassPercentage[i][j] = voteBotMenuData[from].botClassPercentage[i][j];
 			}
 		}
 		case PR_VOTEBOT_MENU_BOTCLASSES_SUB1:
 		{
-			int i = botVoteMenuData[to].menuTeamSelected;
+			int i = voteBotMenuData[to].menuTeamSelected;
 			for (int j = 0; j < 5; j++)
-				botVoteMenuData[to].botClassPercentage[i][j] = botVoteMenuData[from].botClassPercentage[i][j];
+				voteBotMenuData[to].botClassPercentage[i][j] = voteBotMenuData[from].botClassPercentage[i][j];
 		}
 		case PR_VOTEBOT_MENU_BOTCLASSES_SUB2:
 		{
-			int i = botVoteMenuData[to].menuTeamSelected;
+			int i = voteBotMenuData[to].menuTeamSelected;
 			for (int j = 5; j < 10; j++)
-				botVoteMenuData[to].botClassPercentage[i][j] = botVoteMenuData[from].botClassPercentage[i][j];
+				voteBotMenuData[to].botClassPercentage[i][j] = voteBotMenuData[from].botClassPercentage[i][j];
 		}
 		case PR_VOTEBOT_MENU_BOTBEHAVIOR:
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				botVoteMenuData[to].botDefensePercent[i] = botVoteMenuData[from].botDefensePercent[i];
-				botVoteMenuData[to].botOffensePercent[i] = botVoteMenuData[from].botOffensePercent[i];
-				botVoteMenuData[to].botNeitherPercent[i] = botVoteMenuData[from].botNeitherPercent[i];
-				botVoteMenuData[to].botRandomPercent[i]  = botVoteMenuData[from].botRandomPercent[i];
+				voteBotMenuData[to].botDefensePercent[i] = voteBotMenuData[from].botDefensePercent[i];
+				voteBotMenuData[to].botOffensePercent[i] = voteBotMenuData[from].botOffensePercent[i];
+				voteBotMenuData[to].botNeitherPercent[i] = voteBotMenuData[from].botNeitherPercent[i];
+				voteBotMenuData[to].botRandomPercent[i]  = voteBotMenuData[from].botRandomPercent[i];
 			}
 		}
 		case PR_VOTEBOT_MENU_BOTBEHAVIOR_SUB1:
 		{
-			int i = botVoteMenuData[to].menuTeamSelected;
-			botVoteMenuData[to].botDefensePercent[i] = botVoteMenuData[from].botDefensePercent[i];
-			botVoteMenuData[to].botOffensePercent[i] = botVoteMenuData[from].botOffensePercent[i];
-			botVoteMenuData[to].botNeitherPercent[i] = botVoteMenuData[from].botNeitherPercent[i];
-			botVoteMenuData[to].botRandomPercent[i]  = botVoteMenuData[from].botRandomPercent[i];
+			int i = voteBotMenuData[to].menuTeamSelected;
+			voteBotMenuData[to].botDefensePercent[i] = voteBotMenuData[from].botDefensePercent[i];
+			voteBotMenuData[to].botOffensePercent[i] = voteBotMenuData[from].botOffensePercent[i];
+			voteBotMenuData[to].botNeitherPercent[i] = voteBotMenuData[from].botNeitherPercent[i];
+			voteBotMenuData[to].botRandomPercent[i]  = voteBotMenuData[from].botRandomPercent[i];
 		}
 	}
 	// If copying to a player's uncommitted (non-Okay'd) data, also copy to the player's committed data,
@@ -126,7 +108,7 @@ void copyVoteBotData(int from, int to, int menu, bool alsoCopyToCommittedData /*
 }
 
 // PZ: Helper function, for votebot menu.
-string getVoteBotTeamStr(int ndx)
+string VoteBot::getVoteBotTeamStr(int ndx)
 {
 	switch (ndx)
 	{
@@ -152,12 +134,12 @@ string getVoteBotTeamStr(int ndx)
 //            soldier  50%          (and so on...)
 //   -bot modes? (like defense versus offense)
 //   -"random"? (as choice for some of these things)
-void Menu_VoteBot()
+void VoteBot::Menu_VoteBot()
 {
 	string st1, st2, st3, st4, st5, st6, st7;
 	const string noEntryDenoter = S_("^b--^b");
 	int plyrNum = ENT_TO_NUM(self);
-	int teamSel = botVoteMenuData[plyrNum].menuTeamSelected;
+	int teamSel = voteBotMenuData[plyrNum].menuTeamSelected;
 
 	if (self->goal_state == PR_VOTEBOT_MENU_MAIN)
 	{
@@ -189,12 +171,12 @@ void Menu_VoteBot()
 		         "  ^9.. ^b<< Okay^b                \n"
 		         "  ^0.. ^b<< Cancel^b              \n");
 		//replaceStr(st1, "@1", infokey(world, "idealp"));
-		replaceStr(st1, "@1", padstr(to_string(botVoteMenuData[plyrNum].idealNumPlayers), 3, 1));
-		replaceStr(st1, "@2", padstr(to_string(botVoteMenuData[plyrNum].percentPlyrsPerTeam[0]), 3, 1));
-		replaceStr(st1, "@3", padstr(to_string(botVoteMenuData[plyrNum].percentPlyrsPerTeam[1]), 3, 1));
-		replaceStr(st1, "@4", padstr(to_string(botVoteMenuData[plyrNum].percentPlyrsPerTeam[2]), 3, 1));
-		replaceStr(st1, "@5", padstr(to_string(botVoteMenuData[plyrNum].percentPlyrsPerTeam[3]), 3, 1));
-		replaceStr(st1, "@6", padstr(to_string(botVoteMenuData[plyrNum].forceHumansToTeam), 3, 1));
+		replaceStr(st1, "@1", padstr(to_string(voteBotMenuData[plyrNum].idealNumPlayers), 3, 1));
+		replaceStr(st1, "@2", padstr(to_string(voteBotMenuData[plyrNum].percentPlyrsPerTeam[0]), 3, 1));
+		replaceStr(st1, "@3", padstr(to_string(voteBotMenuData[plyrNum].percentPlyrsPerTeam[1]), 3, 1));
+		replaceStr(st1, "@4", padstr(to_string(voteBotMenuData[plyrNum].percentPlyrsPerTeam[2]), 3, 1));
+		replaceStr(st1, "@5", padstr(to_string(voteBotMenuData[plyrNum].percentPlyrsPerTeam[3]), 3, 1));
+		replaceStr(st1, "@6", padstr(to_string(voteBotMenuData[plyrNum].forceHumansToTeam), 3, 1));
 		replaceStr(st1, "255", padstr(noEntryDenoter, 3, 1)); // value of 255 means no value set
 	}
 	else if (self->goal_state == PR_VOTEBOT_MENU_BOTSKILL)
@@ -227,9 +209,9 @@ void Menu_VoteBot()
 		         "  ^9.. ^b<< Okay^b                \n"
 		         "  ^0.. ^b<< Cancel^b              \n");
 		replaceStr(st1, "@T", getVoteBotTeamStr(teamSel));
-		replaceStr(st1, "@1", padstr(to_string(botVoteMenuData[plyrNum].botMinSkillLevel[teamSel]), 3, 1));
-		replaceStr(st1, "@2", padstr(to_string(botVoteMenuData[plyrNum].botMaxSkillLevel[teamSel]), 3, 1));
-		replaceStr(st1, "@3", padstr(to_string(botVoteMenuData[plyrNum].botLockedSkillLevel[teamSel]), 3, 1));
+		replaceStr(st1, "@1", padstr(to_string(voteBotMenuData[plyrNum].botMinSkillLevel[teamSel]), 3, 1));
+		replaceStr(st1, "@2", padstr(to_string(voteBotMenuData[plyrNum].botMaxSkillLevel[teamSel]), 3, 1));
+		replaceStr(st1, "@3", padstr(to_string(voteBotMenuData[plyrNum].botLockedSkillLevel[teamSel]), 3, 1));
 		replaceStr(st1, "255", padstr(noEntryDenoter, 3, 1)); // value of 255 means no value set
 	}
 	else if (self->goal_state == PR_VOTEBOT_MENU_BOTCLASSES)
@@ -262,11 +244,11 @@ void Menu_VoteBot()
 		         "  ^9.. ^b<< Okay^b                \n"
 		         "  ^0.. ^b<< Cancel^b              \n");
 		replaceStr(st1, "@T", getVoteBotTeamStr(teamSel));
-		replaceStr(st1, "@1", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][0]), 3, 1));
-		replaceStr(st1, "@2", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][1]), 3, 1));
-		replaceStr(st1, "@3", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][2]), 3, 1));
-		replaceStr(st1, "@4", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][3]), 3, 1));
-		replaceStr(st1, "@5", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][4]), 3, 1));
+		replaceStr(st1, "@1", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][0]), 3, 1));
+		replaceStr(st1, "@2", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][1]), 3, 1));
+		replaceStr(st1, "@3", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][2]), 3, 1));
+		replaceStr(st1, "@4", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][3]), 3, 1));
+		replaceStr(st1, "@5", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][4]), 3, 1));
 		replaceStr(st1, "255", padstr(noEntryDenoter, 3, 1)); // value of 255 means no value set
 	}
 	else if (self->goal_state == PR_VOTEBOT_MENU_BOTCLASSES_SUB2)
@@ -284,11 +266,11 @@ void Menu_VoteBot()
 		         "  ^9.. ^b<< Okay^b                \n"
 		         "  ^0.. ^b<< Cancel^b              \n");
 		replaceStr(st1, "@T", getVoteBotTeamStr(teamSel));
-		replaceStr(st1, "@1", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][5]), 3, 1));
-		replaceStr(st1, "@2", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][6]), 3, 1));
-		replaceStr(st1, "@3", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][7]), 3, 1));
-		replaceStr(st1, "@4", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][8]), 3, 1));
-		replaceStr(st1, "@5", padstr(to_string(botVoteMenuData[plyrNum].botClassPercentage[teamSel][9]), 3, 1));
+		replaceStr(st1, "@1", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][5]), 3, 1));
+		replaceStr(st1, "@2", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][6]), 3, 1));
+		replaceStr(st1, "@3", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][7]), 3, 1));
+		replaceStr(st1, "@4", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][8]), 3, 1));
+		replaceStr(st1, "@5", padstr(to_string(voteBotMenuData[plyrNum].botClassPercentage[teamSel][9]), 3, 1));
 		replaceStr(st1, "255", padstr(noEntryDenoter, 3, 1)); // value of 255 means no value set
 	}
 	else if (self->goal_state == PR_VOTEBOT_MENU_BOTBEHAVIOR)
@@ -321,43 +303,43 @@ void Menu_VoteBot()
 		         "  ^9.. ^b<< Okay^b                \n"
 		         "  ^0.. ^b<< Cancel^b              \n");
 		replaceStr(st1, "@T", getVoteBotTeamStr(teamSel));
-		replaceStr(st1, "@1", padstr(to_string(botVoteMenuData[plyrNum].botDefensePercent[teamSel]), 3, 1));
-		replaceStr(st1, "@2", padstr(to_string(botVoteMenuData[plyrNum].botOffensePercent[teamSel]), 3, 1));
-		replaceStr(st1, "@3", padstr(to_string(botVoteMenuData[plyrNum].botNeitherPercent[teamSel]), 3, 1));
-		replaceStr(st1, "@4", padstr(to_string(botVoteMenuData[plyrNum].botRandomPercent[teamSel]), 3, 1));
+		replaceStr(st1, "@1", padstr(to_string(voteBotMenuData[plyrNum].botDefensePercent[teamSel]), 3, 1));
+		replaceStr(st1, "@2", padstr(to_string(voteBotMenuData[plyrNum].botOffensePercent[teamSel]), 3, 1));
+		replaceStr(st1, "@3", padstr(to_string(voteBotMenuData[plyrNum].botNeitherPercent[teamSel]), 3, 1));
+		replaceStr(st1, "@4", padstr(to_string(voteBotMenuData[plyrNum].botRandomPercent[teamSel]), 3, 1));
 		replaceStr(st1, "255", padstr(noEntryDenoter, 3, 1)); // value of 255 means no value set
 	}
 
 	st1 = alignTextBlock(st1, PR_ALIGN_LEFT, PR_TRUE);
 
-if (self->goal_state == PR_VOTEBOT_MENU_BOTBEHAVIOR)
-{
-	st1 += S_("\n^bThe effects of this menu are not\nprogrammed yet. So, it has no effect.^b\n");
-}
+	if (self->goal_state == PR_VOTEBOT_MENU_BOTBEHAVIOR)
+	{
+		st1 += S_("\n^bThe effects of this menu are not\nprogrammed yet. So, it has no effect.^b\n");
+	}
 
-	if (botVoteMenuData[plyrNum].gettingNumInput)
+	if (voteBotMenuData[plyrNum].gettingNumInput)
 	{
 		st2 = "\nType value, and press Enter (jump).\n";
-		st3 = to_string(botVoteMenuData[plyrNum].inputNum) + "\n";
+		st3 = to_string(voteBotMenuData[plyrNum].inputNum) + "\n";
 	}
 
 	CenterPrint7(self, st1, st2, st3, st4, st5, st6, st7);
 }
 
-#include <arpa/inet.h> // TODO: remove when done with ntohs() below
+//#include <arpa/inet.h> // TODO: remove when done with ntohs() below
 
 // PZ: For input in the "votebot" menu.
-void Menu_VoteBot_Input(float input)
+void VoteBot::Menu_VoteBot_Input(float input)
 {
 	int plyrNum = ENT_TO_NUM(self);
-	int teamSel = botVoteMenuData[plyrNum].menuTeamSelected;
+	int teamSel = voteBotMenuData[plyrNum].menuTeamSelected;
 
 	// numerical entry input
-	if (botVoteMenuData[plyrNum].gettingNumInput)
+	if (voteBotMenuData[plyrNum].gettingNumInput)
 	if (input >= 1 && input <= 10)
 	{
 		if (input == 10) input = 0;
-		botVoteMenuData[plyrNum].inputNum = botVoteMenuData[plyrNum].inputNum * 10 + input;
+		voteBotMenuData[plyrNum].inputNum = voteBotMenuData[plyrNum].inputNum * 10 + input;
 		goto input_completion; // don't do normal input, below
 	}
 
@@ -392,7 +374,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state, true);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state, true);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -434,39 +416,39 @@ void Menu_VoteBot_Input(float input)
 	{
 		if      (input == 1)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 2)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 3)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 4)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 5)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 6)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 7)
 		{
@@ -476,7 +458,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -499,31 +481,31 @@ void Menu_VoteBot_Input(float input)
 	{
 		if      (input == 1)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 0;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 0;
 			self->goal_state = PR_VOTEBOT_MENU_BOTSKILL_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 2)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 1;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 1;
 			self->goal_state = PR_VOTEBOT_MENU_BOTSKILL_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 3)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 2;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 2;
 			self->goal_state = PR_VOTEBOT_MENU_BOTSKILL_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 4)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 3;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 3;
 			self->goal_state = PR_VOTEBOT_MENU_BOTSKILL_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 5)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 4;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 4;
 			self->goal_state = PR_VOTEBOT_MENU_BOTSKILL_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
@@ -535,7 +517,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state, true);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state, true);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -558,21 +540,21 @@ void Menu_VoteBot_Input(float input)
 	{
 		if      (input == 1)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 2)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 3)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 7)
 		{
@@ -582,7 +564,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -605,31 +587,31 @@ void Menu_VoteBot_Input(float input)
 	{
 		if      (input == 1)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 0;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 0;
 			self->goal_state = PR_VOTEBOT_MENU_BOTCLASSES_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 2)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 1;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 1;
 			self->goal_state = PR_VOTEBOT_MENU_BOTCLASSES_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 3)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 2;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 2;
 			self->goal_state = PR_VOTEBOT_MENU_BOTCLASSES_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 4)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 3;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 3;
 			self->goal_state = PR_VOTEBOT_MENU_BOTCLASSES_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 5)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 4;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 4;
 			self->goal_state = PR_VOTEBOT_MENU_BOTCLASSES_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
@@ -641,7 +623,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state, true);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state, true);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -664,33 +646,33 @@ void Menu_VoteBot_Input(float input)
 	{
 		if      (input == 1)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 2)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 3)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 4)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 5)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 6)
 		{
@@ -705,7 +687,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -728,33 +710,33 @@ void Menu_VoteBot_Input(float input)
 	{
 		if      (input == 1)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 2)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 3)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 4)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 5)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 6)
 		{
@@ -769,7 +751,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -792,31 +774,31 @@ void Menu_VoteBot_Input(float input)
 	{
 		if      (input == 1)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 0;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 0;
 			self->goal_state = PR_VOTEBOT_MENU_BOTBEHAVIOR_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 2)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 1;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 1;
 			self->goal_state = PR_VOTEBOT_MENU_BOTBEHAVIOR_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 3)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 2;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 2;
 			self->goal_state = PR_VOTEBOT_MENU_BOTBEHAVIOR_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 4)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 3;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 3;
 			self->goal_state = PR_VOTEBOT_MENU_BOTBEHAVIOR_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
 		else if (input == 5)
 		{
-			teamSel = botVoteMenuData[plyrNum].menuTeamSelected = 4;
+			teamSel = voteBotMenuData[plyrNum].menuTeamSelected = 4;
 			self->goal_state = PR_VOTEBOT_MENU_BOTBEHAVIOR_SUB1;
 			CuTFMenuSound(PR_MENUSOUND_BROWSE);
 		}
@@ -828,7 +810,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state, true);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state, true);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -851,27 +833,27 @@ void Menu_VoteBot_Input(float input)
 	{
 		if      (input == 1)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 2)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 3)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 4)
 		{
-			botVoteMenuData[plyrNum].gettingNumInput = true;
-			botVoteMenuData[plyrNum].inputForOptNum = input;
-			botVoteMenuData[plyrNum].inputNum = 0;
+			voteBotMenuData[plyrNum].gettingNumInput = true;
+			voteBotMenuData[plyrNum].inputForOptNum = input;
+			voteBotMenuData[plyrNum].inputNum = 0;
 		}
 		else if (input == 7)
 		{
@@ -881,7 +863,7 @@ void Menu_VoteBot_Input(float input)
 		}
 		else if (input == 8)
 		{
-			copyVoteBotData(DEFAULTS, plyrNum, self->goal_state);
+			copyVoteBotData(DEFAULT, plyrNum, self->goal_state);
 			sprint(self, PR_PRINT_HIGH, "Reset menu and submenus to the server default settings.\n");
 			CuTFMenuSound(PR_MENUSOUND_SELL);
 		}
@@ -901,7 +883,7 @@ void Menu_VoteBot_Input(float input)
 		}
 	}
 
-input_completion:
+  input_completion:
 
 	if (self->impulse >= 1 && self->impulse <= 10)
 	{
@@ -999,68 +981,69 @@ return;	// BELOW IS THE OLD VOTEMAP CODE, FOR REFERENCE
 	self->impulse = 0;
 }
 
-void voteBotValueEntryDone(entity player)
+void VoteBot::voteBotValueEntryDone(entity player)
 {
 	int plyrNum = ENT_TO_NUM(player);
-	int teamSel = botVoteMenuData[plyrNum].menuTeamSelected;
-	int input   = botVoteMenuData[plyrNum].inputNum;
-    switch (player->goal_state)
-    {
+	int teamSel = voteBotMenuData[plyrNum].menuTeamSelected;
+	int input   = voteBotMenuData[plyrNum].inputNum;
+	// PZ WARNING (3-19-2026): Should these all be `plyrNum*3` or, rather, `plyrNum + MAX_CLIENTS * 2`?
+	switch (player->goal_state)
+	{
 		case PR_VOTEBOT_MENU_BOTCOUNT:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
-				case 1: botVoteMenuData[plyrNum].idealNumPlayers        = botVoteMenuData[plyrNum*3].idealNumPlayers        = voteBotInputLimits(input, 0, MAX_CLIENTS); break;
-				case 2: botVoteMenuData[plyrNum].percentPlyrsPerTeam[0] = botVoteMenuData[plyrNum*3].percentPlyrsPerTeam[0] = voteBotInputLimits(input, 0, 100); break;
-				case 3: botVoteMenuData[plyrNum].percentPlyrsPerTeam[1] = botVoteMenuData[plyrNum*3].percentPlyrsPerTeam[1] = voteBotInputLimits(input, 0, 100); break;
-				case 4: botVoteMenuData[plyrNum].percentPlyrsPerTeam[2] = botVoteMenuData[plyrNum*3].percentPlyrsPerTeam[2] = voteBotInputLimits(input, 0, 100); break;
-				case 5: botVoteMenuData[plyrNum].percentPlyrsPerTeam[3] = botVoteMenuData[plyrNum*3].percentPlyrsPerTeam[3] = voteBotInputLimits(input, 0, 100); break;
-				case 6: botVoteMenuData[plyrNum].forceHumansToTeam      = botVoteMenuData[plyrNum*3].forceHumansToTeam      = voteBotInputLimits(input, 1, number_of_teams); break;
+				case 1: voteBotMenuData[plyrNum].idealNumPlayers        = voteBotMenuData[plyrNum*3].idealNumPlayers        = voteBotInputLimits(input, 0, MAX_CLIENTS); break;
+				case 2: voteBotMenuData[plyrNum].percentPlyrsPerTeam[0] = voteBotMenuData[plyrNum*3].percentPlyrsPerTeam[0] = voteBotInputLimits(input, 0, 100); break;
+				case 3: voteBotMenuData[plyrNum].percentPlyrsPerTeam[1] = voteBotMenuData[plyrNum*3].percentPlyrsPerTeam[1] = voteBotInputLimits(input, 0, 100); break;
+				case 4: voteBotMenuData[plyrNum].percentPlyrsPerTeam[2] = voteBotMenuData[plyrNum*3].percentPlyrsPerTeam[2] = voteBotInputLimits(input, 0, 100); break;
+				case 5: voteBotMenuData[plyrNum].percentPlyrsPerTeam[3] = voteBotMenuData[plyrNum*3].percentPlyrsPerTeam[3] = voteBotInputLimits(input, 0, 100); break;
+				case 6: voteBotMenuData[plyrNum].forceHumansToTeam      = voteBotMenuData[plyrNum*3].forceHumansToTeam      = voteBotInputLimits(input, 1, number_of_teams); break;
 			}
 			break;
 		}
 		case PR_VOTEBOT_MENU_BOTSKILL_SUB1:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
-				case 1: botVoteMenuData[plyrNum].botMinSkillLevel[teamSel]    = botVoteMenuData[plyrNum*3].botMinSkillLevel[teamSel]    = voteBotInputLimits(input, 1, 4); break;
-				case 2: botVoteMenuData[plyrNum].botMaxSkillLevel[teamSel]    = botVoteMenuData[plyrNum*3].botMaxSkillLevel[teamSel]    = voteBotInputLimits(input, 1, 4); break;
-				case 3: botVoteMenuData[plyrNum].botLockedSkillLevel[teamSel] = botVoteMenuData[plyrNum*3].botLockedSkillLevel[teamSel] = voteBotInputLimits(input, 1, 4); break;
+				case 1: voteBotMenuData[plyrNum].botMinSkillLevel[teamSel]    = voteBotMenuData[plyrNum*3].botMinSkillLevel[teamSel]    = voteBotInputLimits(input, 1, 4); break;
+				case 2: voteBotMenuData[plyrNum].botMaxSkillLevel[teamSel]    = voteBotMenuData[plyrNum*3].botMaxSkillLevel[teamSel]    = voteBotInputLimits(input, 1, 4); break;
+				case 3: voteBotMenuData[plyrNum].botLockedSkillLevel[teamSel] = voteBotMenuData[plyrNum*3].botLockedSkillLevel[teamSel] = voteBotInputLimits(input, 1, 4); break;
 			}
 			break;
 		}
 		case PR_VOTEBOT_MENU_BOTCLASSES_SUB1:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
-				case 1: botVoteMenuData[plyrNum].botClassPercentage[teamSel][0] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][0] = voteBotInputLimits(input, 0, 100); break;
-				case 2: botVoteMenuData[plyrNum].botClassPercentage[teamSel][1] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][1] = voteBotInputLimits(input, 0, 100); break;
-				case 3: botVoteMenuData[plyrNum].botClassPercentage[teamSel][2] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][2] = voteBotInputLimits(input, 0, 100); break;
-				case 4: botVoteMenuData[plyrNum].botClassPercentage[teamSel][3] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][3] = voteBotInputLimits(input, 0, 100); break;
-				case 5: botVoteMenuData[plyrNum].botClassPercentage[teamSel][4] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][4] = voteBotInputLimits(input, 0, 100); break;
+				case 1: voteBotMenuData[plyrNum].botClassPercentage[teamSel][0] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][0] = voteBotInputLimits(input, 0, 100); break;
+				case 2: voteBotMenuData[plyrNum].botClassPercentage[teamSel][1] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][1] = voteBotInputLimits(input, 0, 100); break;
+				case 3: voteBotMenuData[plyrNum].botClassPercentage[teamSel][2] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][2] = voteBotInputLimits(input, 0, 100); break;
+				case 4: voteBotMenuData[plyrNum].botClassPercentage[teamSel][3] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][3] = voteBotInputLimits(input, 0, 100); break;
+				case 5: voteBotMenuData[plyrNum].botClassPercentage[teamSel][4] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][4] = voteBotInputLimits(input, 0, 100); break;
 			}
 			break;
 		}
 		case PR_VOTEBOT_MENU_BOTCLASSES_SUB2:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
-				case 1: botVoteMenuData[plyrNum].botClassPercentage[teamSel][5] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][5] = voteBotInputLimits(input, 0, 100); break;
-				case 2: botVoteMenuData[plyrNum].botClassPercentage[teamSel][6] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][6] = voteBotInputLimits(input, 0, 100); break;
-				case 3: botVoteMenuData[plyrNum].botClassPercentage[teamSel][7] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][7] = voteBotInputLimits(input, 0, 100); break;
-				case 4: botVoteMenuData[plyrNum].botClassPercentage[teamSel][8] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][8] = voteBotInputLimits(input, 0, 100); break;
-				case 5: botVoteMenuData[plyrNum].botClassPercentage[teamSel][9] = botVoteMenuData[plyrNum*3].botClassPercentage[teamSel][9] = voteBotInputLimits(input, 0, 100); break;
+				case 1: voteBotMenuData[plyrNum].botClassPercentage[teamSel][5] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][5] = voteBotInputLimits(input, 0, 100); break;
+				case 2: voteBotMenuData[plyrNum].botClassPercentage[teamSel][6] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][6] = voteBotInputLimits(input, 0, 100); break;
+				case 3: voteBotMenuData[plyrNum].botClassPercentage[teamSel][7] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][7] = voteBotInputLimits(input, 0, 100); break;
+				case 4: voteBotMenuData[plyrNum].botClassPercentage[teamSel][8] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][8] = voteBotInputLimits(input, 0, 100); break;
+				case 5: voteBotMenuData[plyrNum].botClassPercentage[teamSel][9] = voteBotMenuData[plyrNum*3].botClassPercentage[teamSel][9] = voteBotInputLimits(input, 0, 100); break;
 			}
 			break;
 		}
 		case PR_VOTEBOT_MENU_BOTBEHAVIOR_SUB1:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
-				case 1: botVoteMenuData[plyrNum].botDefensePercent[teamSel] = botVoteMenuData[plyrNum*3].botDefensePercent[teamSel] = voteBotInputLimits(input, 0, 100); break;
-				case 2: botVoteMenuData[plyrNum].botOffensePercent[teamSel] = botVoteMenuData[plyrNum*3].botOffensePercent[teamSel] = voteBotInputLimits(input, 0, 100); break;
-				case 3: botVoteMenuData[plyrNum].botNeitherPercent[teamSel] = botVoteMenuData[plyrNum*3].botNeitherPercent[teamSel] = voteBotInputLimits(input, 0, 100); break;
-				case 4: botVoteMenuData[plyrNum].botRandomPercent[teamSel]  = botVoteMenuData[plyrNum*3].botRandomPercent[teamSel]  = voteBotInputLimits(input, 0, 100); break;
+				case 1: voteBotMenuData[plyrNum].botDefensePercent[teamSel] = voteBotMenuData[plyrNum*3].botDefensePercent[teamSel] = voteBotInputLimits(input, 0, 100); break;
+				case 2: voteBotMenuData[plyrNum].botOffensePercent[teamSel] = voteBotMenuData[plyrNum*3].botOffensePercent[teamSel] = voteBotInputLimits(input, 0, 100); break;
+				case 3: voteBotMenuData[plyrNum].botNeitherPercent[teamSel] = voteBotMenuData[plyrNum*3].botNeitherPercent[teamSel] = voteBotInputLimits(input, 0, 100); break;
+				case 4: voteBotMenuData[plyrNum].botRandomPercent[teamSel]  = voteBotMenuData[plyrNum*3].botRandomPercent[teamSel]  = voteBotInputLimits(input, 0, 100); break;
 			}
 			break;
 		}
@@ -1070,13 +1053,13 @@ void voteBotValueEntryDone(entity player)
 	voteBotAutoComplete(player);
 
 	CuTFMenuSound(PR_MENUSOUND_BUY);
-	botVoteMenuData[plyrNum].gettingNumInput = false;
+	voteBotMenuData[plyrNum].gettingNumInput = false;
 	// immediately update the menu display
 	entity oldSelf = self;  self = player;
 	Menu_VoteBot();         self = oldSelf;
 }
 
-int voteBotInputLimits(int input, int minValue, int maxValue)
+int VoteBot::voteBotInputLimits(int input, int minValue, int maxValue)
 {
 	if (input == 255)     return input;     // 255 is the 'unset' value, which makes the server use the default setting
 	if (input < minValue) return minValue;
@@ -1086,22 +1069,22 @@ int voteBotInputLimits(int input, int minValue, int maxValue)
 
 // This is used when entering percentages. So, if you choose, say, 100% for team 1, all other teams get 0%,
 // automatically.
-void voteBotAutoComplete(entity player)
+void VoteBot::voteBotAutoComplete(entity player)
 {
 	int plyrNum = ENT_TO_NUM(player);
-	int teamSel = botVoteMenuData[plyrNum].menuTeamSelected;
+	int teamSel = voteBotMenuData[plyrNum].menuTeamSelected;
 	int newValIdx;
 	switch (player->goal_state)
 	{
 		case PR_VOTEBOT_MENU_BOTCOUNT:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
 				case 1: // ideal number of players/bots
 					break;
 				case 2: case 3: case 4: case 5:  // percent of bots on teams 1 to 4
-					newValIdx = botVoteMenuData[plyrNum].inputForOptNum - 2;
-					voteBotAutoPercent(botVoteMenuData[plyrNum].percentPlyrsPerTeam, botVoteMenuData[plyrNum*3].percentPlyrsPerTeam, number_of_teams, newValIdx);
+					newValIdx = voteBotMenuData[plyrNum].inputForOptNum - 2; // turn 2 through 5 into an index
+					voteBotAutoPercent(voteBotMenuData[plyrNum].percentPlyrsPerTeam, voteBotMenuData[plyrNum*3].percentPlyrsPerTeam, number_of_teams, newValIdx);
 					break;
 				case 6: // force humans to team
 					break;
@@ -1110,15 +1093,15 @@ void voteBotAutoComplete(entity player)
 		}
 		case PR_VOTEBOT_MENU_BOTSKILL_SUB1:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
 				case 1: // minimum skill level
-					if (botVoteMenuData[plyrNum].botMinSkillLevel[teamSel] > botVoteMenuData[plyrNum].botMaxSkillLevel[teamSel])
-						botVoteMenuData[plyrNum].botMaxSkillLevel[teamSel] = botVoteMenuData[plyrNum].botMinSkillLevel[teamSel];
+					if (voteBotMenuData[plyrNum].botMinSkillLevel[teamSel] > voteBotMenuData[plyrNum].botMaxSkillLevel[teamSel])
+						voteBotMenuData[plyrNum].botMaxSkillLevel[teamSel] = voteBotMenuData[plyrNum].botMinSkillLevel[teamSel];
 					break;
 				case 2: // maximum skill level
-					if (botVoteMenuData[plyrNum].botMaxSkillLevel[teamSel] < botVoteMenuData[plyrNum].botMinSkillLevel[teamSel])
-						botVoteMenuData[plyrNum].botMinSkillLevel[teamSel] = botVoteMenuData[plyrNum].botMaxSkillLevel[teamSel];
+					if (voteBotMenuData[plyrNum].botMaxSkillLevel[teamSel] < voteBotMenuData[plyrNum].botMinSkillLevel[teamSel])
+						voteBotMenuData[plyrNum].botMinSkillLevel[teamSel] = voteBotMenuData[plyrNum].botMaxSkillLevel[teamSel];
 					break;
 				case 3: // locked skill level
 					break;
@@ -1127,43 +1110,43 @@ void voteBotAutoComplete(entity player)
 		}
 		case PR_VOTEBOT_MENU_BOTCLASSES_SUB1:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
 				case 1: case 2: case 3: case 4: case 5: // bot classes (page 1)
-					newValIdx = botVoteMenuData[plyrNum].inputForOptNum - 1;
-					voteBotAutoPercent(botVoteMenuData[plyrNum].botClassPercentage[teamSel], botVoteMenuData[plyrNum*3].botClassPercentage[teamSel], 10, newValIdx);
+					newValIdx = voteBotMenuData[plyrNum].inputForOptNum - 1;
+					voteBotAutoPercent(voteBotMenuData[plyrNum].botClassPercentage[teamSel], voteBotMenuData[plyrNum*3].botClassPercentage[teamSel], 10, newValIdx);
 					break;
 			}
 			break;
 		}
 		case PR_VOTEBOT_MENU_BOTCLASSES_SUB2:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
 				case 1: case 2: case 3: case 4: case 5: // bot classes (page 2)
-					newValIdx = botVoteMenuData[plyrNum].inputForOptNum - 1 + 5;
-					voteBotAutoPercent(botVoteMenuData[plyrNum].botClassPercentage[teamSel], botVoteMenuData[plyrNum*3].botClassPercentage[teamSel], 10, newValIdx);
+					newValIdx = voteBotMenuData[plyrNum].inputForOptNum - 1 + 5;
+					voteBotAutoPercent(voteBotMenuData[plyrNum].botClassPercentage[teamSel], voteBotMenuData[plyrNum*3].botClassPercentage[teamSel], 10, newValIdx);
 					break;
 			}
 			break;
 		}
 		case PR_VOTEBOT_MENU_BOTBEHAVIOR_SUB1:
 		{
-			switch (botVoteMenuData[plyrNum].inputForOptNum)
+			switch (voteBotMenuData[plyrNum].inputForOptNum)
 			{
 				case 1: case 2: case 3: case 4: // bot behavior percentages
-					newValIdx = botVoteMenuData[plyrNum].inputForOptNum - 1;
+					newValIdx = voteBotMenuData[plyrNum].inputForOptNum - 1;
 					// Oops. This doesn't fit the mold of all values being in an array, and I don't feel like having to modify all of the other code to make it fit.
 					unsigned char values[8];
-					values[0] = botVoteMenuData[plyrNum].botDefensePercent[teamSel]; values[4] = botVoteMenuData[plyrNum*3].botDefensePercent[teamSel];
-					values[1] = botVoteMenuData[plyrNum].botOffensePercent[teamSel]; values[5] = botVoteMenuData[plyrNum*3].botOffensePercent[teamSel];
-					values[2] = botVoteMenuData[plyrNum].botNeitherPercent[teamSel]; values[6] = botVoteMenuData[plyrNum*3].botNeitherPercent[teamSel];
-					values[3] = botVoteMenuData[plyrNum].botRandomPercent[teamSel];  values[7] = botVoteMenuData[plyrNum*3].botRandomPercent[teamSel];
+					values[0] = voteBotMenuData[plyrNum].botDefensePercent[teamSel]; values[4] = voteBotMenuData[plyrNum*3].botDefensePercent[teamSel];
+					values[1] = voteBotMenuData[plyrNum].botOffensePercent[teamSel]; values[5] = voteBotMenuData[plyrNum*3].botOffensePercent[teamSel];
+					values[2] = voteBotMenuData[plyrNum].botNeitherPercent[teamSel]; values[6] = voteBotMenuData[plyrNum*3].botNeitherPercent[teamSel];
+					values[3] = voteBotMenuData[plyrNum].botRandomPercent[teamSel];  values[7] = voteBotMenuData[plyrNum*3].botRandomPercent[teamSel];
 					voteBotAutoPercent(values, &values[4], 4, newValIdx);
-					botVoteMenuData[plyrNum].botDefensePercent[teamSel] = values[0];   // the entry flags ([plyrNum*3]) will not be changed
-					botVoteMenuData[plyrNum].botOffensePercent[teamSel] = values[1];
-					botVoteMenuData[plyrNum].botNeitherPercent[teamSel] = values[2];
-					botVoteMenuData[plyrNum].botRandomPercent[teamSel]  = values[3];
+					voteBotMenuData[plyrNum].botDefensePercent[teamSel] = values[0];   // the entry flags ([plyrNum*3]) will not be changed
+					voteBotMenuData[plyrNum].botOffensePercent[teamSel] = values[1];
+					voteBotMenuData[plyrNum].botNeitherPercent[teamSel] = values[2];
+					voteBotMenuData[plyrNum].botRandomPercent[teamSel]  = values[3];
 					break;
 			}
 			break;
@@ -1177,9 +1160,9 @@ void voteBotAutoComplete(entity player)
 // ### TODO ###: Make sure player entry flags are reset when they should be.
 // ### TODO ###: Percentage stuff locked up at one point when I entered 255. (stuck in loop in this function)
 // ### TODO ###: Also, starting a votebot vote on a really large list of changes, caused server to crash.
-void voteBotAutoPercent(unsigned char* data, unsigned char* playerEntries, int length, int newValIdx)
+void VoteBot::voteBotAutoPercent(unsigned char* data, unsigned char* playerEntries, int length, int newValIdx)
 {
-	start:
+  start:
 	// [determine points remaining to be distributed]
 	int totalEnteredSoFar = 0;
 	for (int i = 0; i < length; i++) if (playerEntries[i] != 255 && i != newValIdx) totalEnteredSoFar += data[i];
@@ -1218,7 +1201,7 @@ void voteBotAutoPercent(unsigned char* data, unsigned char* playerEntries, int l
 	}
 }
 
-void Player_VoteBot()
+void VoteBot::Player_VoteBot()
 {
 	if (self->playerclass == PR_PC_UNDEFINED && self->classname == "player") // Observers
 		return;
@@ -1263,7 +1246,7 @@ void Player_VoteBot()
 }
 
 // Start vote on bot settings. `self` : player who initiated the vote
-void StartVoteBot()
+void VoteBot::StartVoteBot()
 {
 	if (self->classname != "player" && self->classname != "spec")
 	{
@@ -1316,7 +1299,7 @@ void StartVoteBot()
 }
 
 // PZ: For the votebot menu.
-void voteBotTellRequestedChanges()
+void VoteBot::voteBotTellRequestedChanges()
 {
 	int voteStarter = ENT_TO_NUM(current_voteent->owner) + MAX_CLIENTS; // we want the index to their committed data
 	string output = ""; // I am putting output into a string first, so that I can remove ending comma.
@@ -1324,41 +1307,41 @@ void voteBotTellRequestedChanges()
 	std::vector<string> classStrs = {"Scout", "Sniper", "Soldier", "Demoman", "Medic", "Hwguy", "Pyro", "Spy", "Engineer", "Random"};
 
 	// Player/Bot Count
-	if (shouldWeTellChange(botVoteMenuData[voteStarter].idealNumPlayers, botVoteMenuData[CURRENT].idealNumPlayers))
-		output += "Overall Player/Bot Count: " + to_string(botVoteMenuData[voteStarter].idealNumPlayers) + ", ";
+	if (shouldWeTellChange(voteBotMenuData[voteStarter].idealNumPlayers, voteBotMenuData[CURRENT].idealNumPlayers))
+		output += "Overall Player/Bot Count: " + to_string(voteBotMenuData[voteStarter].idealNumPlayers) + ", ";
 	for (int i = 0; i < 4; i++)
-	if (shouldWeTellChange(botVoteMenuData[voteStarter].percentPlyrsPerTeam[i], botVoteMenuData[CURRENT].percentPlyrsPerTeam[i], true))
-		output += "Players/Bots On Team " + to_string(i+1) + ": " + to_string(botVoteMenuData[voteStarter].percentPlyrsPerTeam[i]) + "%, ";
-	if (shouldWeTellChange(botVoteMenuData[voteStarter].forceHumansToTeam, botVoteMenuData[CURRENT].forceHumansToTeam))
-		output += "Force Humans To Team: " + to_string(botVoteMenuData[voteStarter].forceHumansToTeam) + ", ";
+	if (shouldWeTellChange(voteBotMenuData[voteStarter].percentPlyrsPerTeam[i], voteBotMenuData[CURRENT].percentPlyrsPerTeam[i], true))
+		output += "Players/Bots On Team " + to_string(i+1) + ": " + to_string(voteBotMenuData[voteStarter].percentPlyrsPerTeam[i]) + "%, ";
+	if (shouldWeTellChange(voteBotMenuData[voteStarter].forceHumansToTeam, voteBotMenuData[CURRENT].forceHumansToTeam))
+		output += "Force Humans To Team: " + to_string(voteBotMenuData[voteStarter].forceHumansToTeam) + ", ";
 	// Bot Skill Level
 	for (int i = 0; i < 5; i++)
 	{
-		if (shouldWeTellChange(botVoteMenuData[voteStarter].botMinSkillLevel[i], botVoteMenuData[CURRENT].botMinSkillLevel[i]))
-			output += teamStrs[i] + " Minimum Skill Level: " + to_string(botVoteMenuData[voteStarter].botMinSkillLevel[i]) + ", ";
-		if (shouldWeTellChange(botVoteMenuData[voteStarter].botMaxSkillLevel[i], botVoteMenuData[CURRENT].botMaxSkillLevel[i]))
-			output += teamStrs[i] + " Maximum Skill Level: " + to_string(botVoteMenuData[voteStarter].botMaxSkillLevel[i]) + ", ";
-		if (shouldWeTellChange(botVoteMenuData[voteStarter].botLockedSkillLevel[i], botVoteMenuData[CURRENT].botLockedSkillLevel[i]))
-			output += teamStrs[i] + " Locked Skill Level: " + to_string(botVoteMenuData[voteStarter].botLockedSkillLevel[i]) + ", ";
+		if (shouldWeTellChange(voteBotMenuData[voteStarter].botMinSkillLevel[i], voteBotMenuData[CURRENT].botMinSkillLevel[i]))
+			output += teamStrs[i] + " Minimum Skill Level: " + to_string(voteBotMenuData[voteStarter].botMinSkillLevel[i]) + ", ";
+		if (shouldWeTellChange(voteBotMenuData[voteStarter].botMaxSkillLevel[i], voteBotMenuData[CURRENT].botMaxSkillLevel[i]))
+			output += teamStrs[i] + " Maximum Skill Level: " + to_string(voteBotMenuData[voteStarter].botMaxSkillLevel[i]) + ", ";
+		if (shouldWeTellChange(voteBotMenuData[voteStarter].botLockedSkillLevel[i], voteBotMenuData[CURRENT].botLockedSkillLevel[i]))
+			output += teamStrs[i] + " Locked Skill Level: " + to_string(voteBotMenuData[voteStarter].botLockedSkillLevel[i]) + ", ";
 	}
 	// Bot Classes
 	for (int i = 0; i < 5; i++) // Example: Overall Class Sniper: 100%
 	{
 		for (int j = 0; j < 10; j++)
-			if (shouldWeTellChange(botVoteMenuData[voteStarter].botClassPercentage[i][j], botVoteMenuData[CURRENT].botClassPercentage[i][j], true))
-				output += teamStrs[i] + " Class " + classStrs[j] + ": " + to_string(botVoteMenuData[voteStarter].botClassPercentage[i][j]) + "%, ";
+			if (shouldWeTellChange(voteBotMenuData[voteStarter].botClassPercentage[i][j], voteBotMenuData[CURRENT].botClassPercentage[i][j], true))
+				output += teamStrs[i] + " Class " + classStrs[j] + ": " + to_string(voteBotMenuData[voteStarter].botClassPercentage[i][j]) + "%, ";
 	}
 	// Bot Behavior
 	for (int i = 0; i < 5; i++)
 	{
-		if (shouldWeTellChange(botVoteMenuData[voteStarter].botDefensePercent[i], botVoteMenuData[CURRENT].botDefensePercent[i], true))
-			output += teamStrs[i] + " Bots On Defense: " + to_string(botVoteMenuData[voteStarter].botDefensePercent[i]) + "%, ";
-		if (shouldWeTellChange(botVoteMenuData[voteStarter].botOffensePercent[i], botVoteMenuData[CURRENT].botOffensePercent[i], true))
-			output += teamStrs[i] + " Bots On Offense: " + to_string(botVoteMenuData[voteStarter].botOffensePercent[i]) + "%, ";
-		if (shouldWeTellChange(botVoteMenuData[voteStarter].botNeitherPercent[i], botVoteMenuData[CURRENT].botNeitherPercent[i], true))
-			output += teamStrs[i] + " Bots On Neither Off/Def: " + to_string(botVoteMenuData[voteStarter].botNeitherPercent[i]) + "%, ";
-		if (shouldWeTellChange(botVoteMenuData[voteStarter].botRandomPercent[i],  botVoteMenuData[CURRENT].botRandomPercent[i], true))
-			output += teamStrs[i] + " Bots On Random Off/Def: " + to_string(botVoteMenuData[voteStarter].botRandomPercent[i]) + "%, ";
+		if (shouldWeTellChange(voteBotMenuData[voteStarter].botDefensePercent[i], voteBotMenuData[CURRENT].botDefensePercent[i], true))
+			output += teamStrs[i] + " Bots On Defense: " + to_string(voteBotMenuData[voteStarter].botDefensePercent[i]) + "%, ";
+		if (shouldWeTellChange(voteBotMenuData[voteStarter].botOffensePercent[i], voteBotMenuData[CURRENT].botOffensePercent[i], true))
+			output += teamStrs[i] + " Bots On Offense: " + to_string(voteBotMenuData[voteStarter].botOffensePercent[i]) + "%, ";
+		if (shouldWeTellChange(voteBotMenuData[voteStarter].botNeitherPercent[i], voteBotMenuData[CURRENT].botNeitherPercent[i], true))
+			output += teamStrs[i] + " Bots On Neither Off/Def: " + to_string(voteBotMenuData[voteStarter].botNeitherPercent[i]) + "%, ";
+		if (shouldWeTellChange(voteBotMenuData[voteStarter].botRandomPercent[i],  voteBotMenuData[CURRENT].botRandomPercent[i], true))
+			output += teamStrs[i] + " Bots On Random Off/Def: " + to_string(voteBotMenuData[voteStarter].botRandomPercent[i]) + "%, ";
 	}
 
 	// replace 255 values with "def"
@@ -1374,7 +1357,7 @@ void voteBotTellRequestedChanges()
 }
 
 // helper function
-bool shouldWeTellChange(unsigned char newValue, unsigned char oldValue, bool isPercentage /*= false*/)
+bool VoteBot::shouldWeTellChange(unsigned char newValue, unsigned char oldValue, bool isPercentage /*= false*/)
 {
 	if (newValue == oldValue) return false;
 
@@ -1385,9 +1368,5 @@ bool shouldWeTellChange(unsigned char newValue, unsigned char oldValue, bool isP
 
 	return true;
 }
-
-// =======================
-// END VOTEBOT FUNCTIONS
-// =======================
 
 } // END namespace Progs

@@ -14,7 +14,7 @@ are on their respective files now.
 #include "ofndefs.h"
 #include "menu.h"
 #include "vote.h"
-#include "vote2.h"
+#include "votebot.h"
 #include "prozac.h"
 #include "debug.h"
 #include "optimize.h"
@@ -450,7 +450,7 @@ void Player_Menu()
 	}
 	else if (self->current_menu == PR_MENU_VOTEBOT)  // PZ: for "votebot"
 	{
-		Menu_VoteBot();
+		voteBot.Menu_VoteBot();
 	}
 	//WK ------------------
 	else if (self->current_menu == PR_MENU_PRIMARY_WEAPON)
@@ -1147,7 +1147,7 @@ void Menu_Input(float inp)
 	else if (self->current_menu == PR_MENU_VOTEMAP)
 		Menu_VoteMap_Input(inp);
 	else if (self->current_menu == PR_MENU_VOTEBOT) // PZ: for "votebot"
-		Menu_VoteBot_Input(inp);
+		voteBot.Menu_VoteBot_Input(inp);
 	else if (self->current_menu == PR_MENU_PRIMARY_WEAPON) //WK --
 		Menu_PrimaryWeapon_Input(inp);
 	else if (self->current_menu == PR_MENU_SECONDARY_WEAPON)
@@ -3373,7 +3373,7 @@ void Menu_EngineerRepair_Tesla()
 		if (cost > self->ammo_cells)
 			cost = self->ammo_cells;
 
-			self->ammo_cells = self->ammo_cells - cost;
+		self->ammo_cells = self->ammo_cells - cost;
 		self->building->health = self->building->health + (cost * 2);
 		if (self->building->health >= self->building->max_health)
 			self->building->health = self->building->max_health;
@@ -3388,6 +3388,7 @@ void Menu_EngineerRepair_Tesla()
 	if (self->building->ammo_cells >= maxcells)
 		self->building->ammo_cells = maxcells;
 }
+
 // PZ: It now returns whether or not we need to wait for a confirmation before dismantling. It previously returned `void`.
 float Menu_EngineerDismantle_Tesla()
 {

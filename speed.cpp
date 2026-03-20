@@ -55,14 +55,14 @@ void Kick_My_Owner()
 	dremove(self);
 }
 
-#define PR_MAXPERCENT 35 //WK this looks good for wall strafing
+#define PR_MAXPERCENT 35 // WK this looks good for wall strafing
 //reasons for not checking
-#define PR_IMMUNE 	1
-#define PR_GRAPPLE	2
-#define PR_FLYING 	4
-#define PR_NOCLASS 	16
-#define PR_BUILDING 	32
-#define PR_DEAD	64
+#define PR_IMMUNE     1
+#define PR_GRAPPLE    2
+#define PR_FLYING     4
+#define PR_NOCLASS    16
+#define PR_BUILDING   32
+#define PR_DEAD       64
 
 void TeamFortress_CheckForSpeed()
 {
@@ -82,31 +82,31 @@ void TeamFortress_CheckForSpeed()
 
 	immune = 0;
 
-max = self->owner->maxspeed;
-if ((self->owner->job & PR_JOB_RUNNER) && (self->owner->job & PR_JOB_ACTIVE))
-	max = max + 200;
-//make sure ok to check
-if (self->owner->immune_to_chec > time)
-	immune = immune | PR_IMMUNE; //its ok since #IMMUNE becomes 1
-if (self->owner->hook_out)
-	immune = immune | PR_GRAPPLE;
-//WK We should boot if they have no set speed and are moving
-//if (self.owner.maxspeed == 0) // no set speed
-if (!(self->owner->flags & PR_FL_ONGROUND)) //WK People in air immune
-	immune = immune | PR_FLYING;
-if (self->owner->playerclass == PR_PC_UNDEFINED)
-	immune = immune | PR_NOCLASS;
-if (self->owner->done_custom & PR_CUSTOM_BUILDING)
-	immune = immune | PR_BUILDING;
-if (self->owner->health <= 0)
-	immune = immune | PR_DEAD;
-if (!self->owner->is_connected)
-	dremove(self);
+	max = self->owner->maxspeed;
+	if ((self->owner->job & PR_JOB_RUNNER) && (self->owner->job & PR_JOB_ACTIVE))
+		max = max + 200;
+	// make sure ok to check
+	if (self->owner->immune_to_chec > time)
+		immune = immune | PR_IMMUNE; // its ok since #IMMUNE becomes 1
+	if (self->owner->hook_out)
+		immune = immune | PR_GRAPPLE;
+	// WK We should boot if they have no set speed and are moving
+	//if (self.owner.maxspeed == 0) // no set speed
+	if (!(self->owner->flags & PR_FL_ONGROUND)) // WK People in air immune
+		immune = immune | PR_FLYING;
+	if (self->owner->playerclass == PR_PC_UNDEFINED)
+		immune = immune | PR_NOCLASS;
+	if (self->owner->done_custom & PR_CUSTOM_BUILDING)
+		immune = immune | PR_BUILDING;
+	if (self->owner->health <= 0)
+		immune = immune | PR_DEAD;
+	if (!self->owner->is_connected)
+		dremove(self);
 
-if (immune)
-	check = PR_FALSE;
-else
-	check = PR_TRUE;
+	if (immune)
+		check = PR_FALSE;
+	else
+		check = PR_TRUE;
 
 	//WK Lowered percent chance of restuffing because stuffcmds() cause overflows
 	if (!self->lip || !(self->has_camera) || (random() <= 0.1)){ //periodically reset ping and gotwalls.

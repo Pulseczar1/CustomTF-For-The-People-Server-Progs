@@ -145,7 +145,7 @@ float 	ldmg;
 	if (self->enemy->tf_items & PR_NIT_GEL) ldmg = ldmg / 2;
 	if (self->enemy->cutf_items & PR_CUTF_DEMONLORE) ldmg = ldmg / 2;
 	//T_Damage (self.enemy, self, self, ldmg);
-    TF_T_Damage(self->enemy, self, self, ldmg,0,PR_TF_TD_OTHER);
+	TF_T_Damage(self->enemy, self, self, ldmg,0,PR_TF_TD_OTHER);
 	sound (self, PR_CHAN_VOICE, "shambler/smack.wav", 1, PR_ATTN_NORM);
 
 	SpawnMeatSpray (self->origin + v_forward*16, crandom() * 100 * v_right);

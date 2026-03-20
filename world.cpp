@@ -15,7 +15,7 @@
 #include "gweapons.h"
 #include "environ.h"
 #include "frikbot/bot_qw.h"
-#include "vote2.h"
+#include "votebot.h"
 
 namespace Progs {
 
@@ -265,7 +265,7 @@ void worldspawn()
 	//frik_initializeFrikBotModule();  // FrikBot  // PZ: moved to StartFrame(). Needs to run after all map entities are created, like doors, teleporters, etc.
 
 	// PZ: Initialize the votebot menu data on every map change.
-	initVoteBotMenuData();
+	voteBot.initVoteBotMenuData();
 
 	// PZ: make sure to execute any <mapname>.cfg file in the cycledir
 	// localcmd() doesn't immediately execute, so I made flushcmd().

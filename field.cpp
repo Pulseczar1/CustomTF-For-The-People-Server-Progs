@@ -955,7 +955,7 @@ void Field_MakeVisual(entity tfield)
         else
             WriteByte (PR_MSG_BROADCAST, PR_TE_LIGHTNING1);
 
-	    WriteEntity (PR_MSG_BROADCAST, tfield);
+        WriteEntity (PR_MSG_BROADCAST, tfield);
 
         if (random() > 0.5)
         {

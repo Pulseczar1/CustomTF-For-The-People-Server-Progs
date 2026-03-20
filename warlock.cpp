@@ -1272,16 +1272,16 @@ void MakeMonsterName(entity monster)
 void custom_demon_create(float points, float type)
 {
 	float slotnum;
-    slotnum = GetCurrentSoul(self);
+	slotnum = GetCurrentSoul(self);
 
-	//Play random summoning sound here
+	// Play random summoning sound here
 	//r = random();
 	//if (r < 0.33)
-	    sound (self, PR_CHAN_VOICE, "ambience/thunder1.wav", 1, PR_ATTN_NORM);
+		sound (self, PR_CHAN_VOICE, "ambience/thunder1.wav", 1, PR_ATTN_NORM);
 	//else if (r < 0.66)
-	//    sound (self, #CHAN_WEAPON, "boss1/sight1.wav", 1, #ATTN_NORM);
+		//sound (self, #CHAN_WEAPON, "boss1/sight1.wav", 1, #ATTN_NORM);
 	//else
-	  //  sound (self, #CHAN_WEAPON, "boss1/out1.wav", 1, #ATTN_NORM);
+		//sound (self, #CHAN_WEAPON, "boss1/out1.wav", 1, #ATTN_NORM);
 
 	makevectors (self->v_angle);
 	v_forward[Z] = 0;
@@ -1294,74 +1294,74 @@ void custom_demon_create(float points, float type)
 	if (type == 1)
 	{
 		newmis->classname = "monster_wizard";
-        newmis->mdl = "progs/wizard.mdl";
+		newmis->mdl = "progs/wizard.mdl";
 	}
 	else if (type == 2)
 	{
 		newmis->classname = "monster_fish";
-        newmis->mdl = "progs/fish.mdl";
+		newmis->mdl = "progs/fish.mdl";
 	}
 	else if (type == 3)
 	{
-        newmis->classname = "monster_demon1";
-        newmis->mdl = "progs/demon.mdl";
+		newmis->classname = "monster_demon1";
+		newmis->mdl = "progs/demon.mdl";
 	}
-    else if (type == 4)
+	else if (type == 4)
 	{
 		newmis->classname = "monster_gremlin";
-        newmis->mdl = "progs/grem.mdl";
+		newmis->mdl = "progs/grem.mdl";
 	}
-    else if (type == 5)
+	else if (type == 5)
 	{
 		newmis->classname = "monster_shambler";
-        newmis->mdl = "progs/shambler.mdl";
+		newmis->mdl = "progs/shambler.mdl";
 	}
 
-    newmis->team_no = self->team_no; //Go team red! ;)
+	newmis->team_no = self->team_no; //Go team red! ;)
 
-    newmis->origin = self->origin + v_forward;
+	newmis->origin = self->origin + v_forward;
 	newmis->has_camera = 4;
 
-    newmis->increase_team1 = slotnum; //slot
-    newmis->increase_team2 = GetNameType(self,newmis->increase_team1,PR_FALSE);
-    newmis->PR_monster_type = type; // kind of monster
+	newmis->increase_team1 = slotnum; //slot
+	newmis->increase_team2 = GetNameType(self,newmis->increase_team1,PR_FALSE);
+	newmis->PR_monster_type = type; // kind of monster
 
-    MakeMonsterName(newmis);
+	MakeMonsterName(newmis);
 
 	// checkarea used to be here
 
-    setmodel (newmis, newmis->mdl);
+	setmodel (newmis, newmis->mdl);
 
-    if ( type == 1 )
+	if ( type == 1 )
 	{
-        //setmodel (newmis, "progs/wizard.mdl");
-        setsize (newmis, V({-16, -16, -24}), V({16, 16, 40}));
-        setorigin (newmis, newmis->origin + V({0, 0, 30}));
+		//setmodel (newmis, "progs/wizard.mdl");
+		setsize (newmis, V({-16, -16, -24}), V({16, 16, 40}));
+		setorigin (newmis, newmis->origin + V({0, 0, 30}));
 	}
-    else if ( type == 2 )
+	else if ( type == 2 )
 	{
-        //setmodel (newmis, "progs/fish.mdl");
-        setsize (newmis, V({-16, -16, -24}), V({16, 16, 24}));
+		//setmodel (newmis, "progs/fish.mdl");
+		setsize (newmis, V({-16, -16, -24}), V({16, 16, 24}));
 		setorigin (newmis, newmis->origin + V({0, 0, 20}));
 	}
 	else if ( type == 3 )
 	{
-        //setmodel (newmis, "progs/demon.mdl");
-        setsize (newmis, PR_VEC_HULL2_MIN, PR_VEC_HULL2_MAX);
-		setorigin (newmis, newmis->origin + V({0, 0, 30}));
-    }
-    else if ( type == 4 )
-    {
-        //setmodel (newmis, "progs/grem.mdl");
-		setsize (newmis, PR_VEC_HULL_MIN, PR_VEC_HULL_MAX);
-		setorigin (newmis, newmis->origin + V({0, 0, 30}));
-    }
-    else if ( type == 5 )
-    {
-        //setmodel (newmis, "progs/shambler.mdl");
+		//setmodel (newmis, "progs/demon.mdl");
 		setsize (newmis, PR_VEC_HULL2_MIN, PR_VEC_HULL2_MAX);
 		setorigin (newmis, newmis->origin + V({0, 0, 30}));
-    }
+	}
+	else if ( type == 4 )
+	{
+		//setmodel (newmis, "progs/grem.mdl");
+		setsize (newmis, PR_VEC_HULL_MIN, PR_VEC_HULL_MAX);
+		setorigin (newmis, newmis->origin + V({0, 0, 30}));
+	}
+	else if ( type == 5 )
+	{
+		//setmodel (newmis, "progs/shambler.mdl");
+		setsize (newmis, PR_VEC_HULL2_MIN, PR_VEC_HULL2_MAX);
+		setorigin (newmis, newmis->origin + V({0, 0, 30}));
+	}
 
 	// Gizmo - moved this after size and origin
 	newmis->owner = self;
@@ -1385,45 +1385,45 @@ void custom_demon_create(float points, float type)
 
 	//Test successful, so go ahead and finish summon
 
-    newmis->skin=0;
+	newmis->skin=0;
 
-    newmis->ltime=time;
+	newmis->ltime=time;
 
-    string MName;
-    MName=GetMonsterName(newmis);
+	string MName;
+	MName=GetMonsterName(newmis);
 
-    teamprefixsprint(self->team_no,self);
-    teamsprint6(self,self->netname," has summoned the ", MName, " ", newmis->netname,"\n");
+	teamprefixsprint(self->team_no,self);
+	teamsprint6(self,self->netname," has summoned the ", MName, " ", newmis->netname,"\n");
 
 	//self.job = self.job | #JOB_DEMON_OUT;
 	self->job_finished = time + 3;	//Don't let em kill demon for 15 secs.
-									// SB 15 is tight; 10
-									// 10 is tight; 5
+	                                // SB 15 is tight; 10
+	                                // 10 is tight; 5
                                     // OfN 5 is tight; 3 ;)
-    if (type==3)
-        sound (self, PR_CHAN_BODY, "demon/sight2.wav", 1, PR_ATTN_NORM);
+	if (type==3)
+		sound (self, PR_CHAN_BODY, "demon/sight2.wav", 1, PR_ATTN_NORM);
 
 	newmis->velocity = v_forward * 10;// + '0 0 250';
-    newmis->angles = vectoangles(newmis->velocity);
+	newmis->angles = vectoangles(newmis->velocity);
 
 	if (newmis->flags & PR_FL_ONGROUND)
 		newmis->flags = newmis->flags - PR_FL_ONGROUND;
 
-    newmis->velocity = v_forward * 10;
+	newmis->velocity = v_forward * 10;
 
 	// Gizmo - removed '.takedamage = DAMAGE_AIM' as it causes a bug if the demon gets hurt before *monster_start_go is called
 	// ... the monster start function sets .takedamage
-    newmis->movetype = PR_MOVETYPE_TOSS;
-    newmis->solid = PR_SOLID_SLIDEBOX;
+	newmis->movetype = PR_MOVETYPE_TOSS;
+	newmis->solid = PR_SOLID_SLIDEBOX;
 
-    if (type==1) // scrags start specially
-    {
-        newmis->velocity=V({0, 0, 0});
-        newmis->movetype = PR_MOVETYPE_STEP;
-    }
+	if (type==1) // scrags start specially
+	{
+		newmis->velocity=V({0, 0, 0});
+		newmis->movetype = PR_MOVETYPE_STEP;
+	}
 
-    //if ( newmis.classname == "monster_demon1" )
-    if (type == 3)
+	//if ( newmis.classname == "monster_demon1" )
+	if (type == 3)
 	{
 		//newmis.health = #DEMON_HP; //WK 300
 		newmis->armorclass = PR_AT_SAVEFIRE; //#AT_SAVESHOT | #AT_SAVEFIRE;
@@ -1442,12 +1442,12 @@ void custom_demon_create(float points, float type)
 		newmis->nextthink = time + 1;
 		//newmis.touch = Demon_JumpTouch;
 
-        //newmis.touch = SUB_Null;
+		//newmis.touch = SUB_Null;
 
-   		sprint(self, PR_PRINT_HIGH, "You summon a fiend.\n");
+		sprint(self, PR_PRINT_HIGH, "You summon a fiend.\n");
 	}
 	//else if ( newmis.classname == "monster_shambler" )
-    else if (type == 5)
+	else if (type == 5)
 	{
 		//newmis.health = #SHAMBLER_HP;//750 + points * 350; //WK 300
 		newmis->armorclass = 0;// ofn- #AT_SAVEEXPLOSION | #AT_SAVEMELEE;
@@ -1467,80 +1467,80 @@ void custom_demon_create(float points, float type)
 		//newmis.touch = Demon_JumpTouch;
 		//newmis.touch = SUB_Null;
 		////newmis.real_owner.demon_blood = 0; marduk bug
-        //newmis.th_missile = sham_xmas1; // OfN
-        newmis->demon_three = world;
+		//newmis.th_missile = sham_xmas1; // OfN
+		newmis->demon_three = world;
 		sprint(self, PR_PRINT_HIGH, "You summon a shambler.\n");
 	}
 	//else if (newmis.classname == "monster_fish")
-    else if (type == 2)
-    {
-        //newmis.health = #FISH_HP;
-
-	    newmis->th_stand = fish_stand1;
-    	newmis->th_walk = fish_walk1;
-    	newmis->th_run = fish_run1;
-    	newmis->th_die = fish_death;
-    	newmis->th_pain = fish_pain;
-    	newmis->th_melee = fish_attack1;
-    	newmis->nextthink = time + 0.05;
-    	newmis->think = fish_toss1;
-
-        newmis->dmgtime = time + 5;
-
-        sprint(self, PR_PRINT_HIGH, "You summon a piranha.\n");
-        //total_monsters = total_monsters + 1;
-	    //set_monster_health();
-    }
-    //else if (newmis.classname == "monster_wizard")
-    else if (type == 1)
+	else if (type == 2)
 	{
-        //newmis.health = #SCRAG_HP;
-		newmis->think =flymonster_start_go;// walkmonster_start;
-        newmis->th_stand = wiz_stand1;
-	    newmis->th_walk = wiz_walk1;
-	    newmis->th_run = wiz_run1;
-	    newmis->th_missile = Wiz_Missile;
-    	newmis->th_pain = Wiz_Pain;
-	    newmis->th_die = wiz_die;
+		//newmis.health = #FISH_HP;
 
-        newmis->nextthink = time + 0.05;
+		newmis->th_stand = fish_stand1;
+		newmis->th_walk = fish_walk1;
+		newmis->th_run = fish_run1;
+		newmis->th_die = fish_death;
+		newmis->th_pain = fish_pain;
+		newmis->th_melee = fish_attack1;
+		newmis->nextthink = time + 0.05;
+		newmis->think = fish_toss1;
+
+		newmis->dmgtime = time + 5;
+
+		sprint(self, PR_PRINT_HIGH, "You summon a piranha.\n");
+		//total_monsters = total_monsters + 1;
+		//set_monster_health();
+	}
+	//else if (newmis.classname == "monster_wizard")
+	else if (type == 1)
+	{
+		//newmis.health = #SCRAG_HP;
+		newmis->think =flymonster_start_go;// walkmonster_start;
+		newmis->th_stand = wiz_stand1;
+		newmis->th_walk = wiz_walk1;
+		newmis->th_run = wiz_run1;
+		newmis->th_missile = Wiz_Missile;
+		newmis->th_pain = Wiz_Pain;
+		newmis->th_die = wiz_die;
+
+		newmis->nextthink = time + 0.05;
 		//newmis.armorclass = 0; //- OfN - none #AT_SAVESHOT; // kevlar
 		newmis->last_saveme_sound = 0; // ? oh that
 		//newmis.touch = SUB_Null;
 
-        newmis->yaw_speed = 20;
+		newmis->yaw_speed = 20;
 
 		sprint(self, PR_PRINT_HIGH, "You summon a scrag.\n");
-    }
-    else if (type == 4)
-    {
-        newmis->th_stand = gremlin_main_stand;
-        newmis->th_walk = gremlin_main_walk;
-        newmis->th_run = gremlin_run1;
-        newmis->th_die = gremlin_die;
-        newmis->th_melee = Gremlin_MeleeAttack;     // one of two attacks
-        newmis->th_missile = Gremlin_MissileAttack; // check for random jump or firing of weapon
-        newmis->th_pain = gremlin_pain;
+	}
+	else if (type == 4)
+	{
+		newmis->th_stand = gremlin_main_stand;
+		newmis->th_walk = gremlin_main_walk;
+		newmis->th_run = gremlin_run1;
+		newmis->th_die = gremlin_die;
+		newmis->th_melee = Gremlin_MeleeAttack;     // one of two attacks
+		newmis->th_missile = Gremlin_MissileAttack; // check for random jump or firing of weapon
+		newmis->th_pain = gremlin_pain;
 
-        newmis->think = walkmonster_start;
+		newmis->think = walkmonster_start;
 		newmis->nextthink = time + 1;
 
-        sprint(self,PR_PRINT_HIGH,"You summon a gremlin.\n");
+		sprint(self,PR_PRINT_HIGH,"You summon a gremlin.\n");
 
-        //newmis.health = #GREMLIN_HP;
-        newmis->yaw_speed = 35; // Original 40
-    }
+		//newmis.health = #GREMLIN_HP;
+		newmis->yaw_speed = 35; // Original 40
+	}
 
-    newmis->touch = MonsterTouch;
+	newmis->touch = MonsterTouch;
 
-    newmis->PR_monsterflag = PR_STRFLAG_MONSTER; // flag to identify monsters/army for sentry targetting
+	newmis->PR_monsterflag = PR_STRFLAG_MONSTER; // flag to identify monsters/army for sentry targetting
 
-    if (slotnum == 0)
-    	newmis->real_owner->demon_one = newmis;
-    else if (slotnum == 1)
-        newmis->real_owner->demon_two = newmis;
-    else
-        newmis->real_owner->demon_three = newmis;
+	if (slotnum == 0)
+		newmis->real_owner->demon_one = newmis;
+	else if (slotnum == 1)
+		newmis->real_owner->demon_two = newmis;
+	else
+		newmis->real_owner->demon_three = newmis;
 
 	// Gizmo - .increase_team4 used to be right above MakeMonsterName(), moved it down here so heads aren't lost if inside wall
 	newmis->increase_team4 = GetMonsterLevel(newmis);
@@ -1548,27 +1548,27 @@ void custom_demon_create(float points, float type)
 	newmis->health = GetHPforMeat(newmis);
 	newmis->max_health = newmis->health;
 
-    newmis->penance_time = 0; // Start in standing mode
+	newmis->penance_time = 0; // Start in standing mode
 
-    #ifdef PR_MONSTERS_AURA
-    newmis->aura = PR_MONSTERS_AURA;
-    #else
-    newmis->aura = 0;
-    #endif
+	#ifdef PR_MONSTERS_AURA
+	newmis->aura = PR_MONSTERS_AURA;
+	#else
+	newmis->aura = 0;
+	#endif
 
-    spawnFOG(newmis->origin);
+	spawnFOG(newmis->origin);
 
-    newmis->enemy = world;
-    newmis->oldenemy = world;
+	newmis->enemy = world;
+	newmis->oldenemy = world;
 
-    #ifdef PR_MONSTERS_STATE
-    newmis->tfstate = PR_MONSTERS_STATE; //#TFSTATE_INFECTED;
-    #else
-    newmis->tfstate = 0;
-    #endif
+	#ifdef PR_MONSTERS_STATE
+	newmis->tfstate = PR_MONSTERS_STATE; //#TFSTATE_INFECTED;
+	#else
+	newmis->tfstate = 0;
+	#endif
 
-    newmis->is_connected = PR_TRUE;
-    newmis->flags = newmis->flags | PR_FL_MONSTER;
+	newmis->is_connected = PR_TRUE;
+	newmis->flags = newmis->flags | PR_FL_MONSTER;
 	// for Neo mode
 	if (neo.isModeActive() && newmis->real_owner == neo.getNeo())
 		newmis->effects = newmis->effects | (PR_EF_BRIGHTLIGHT | PR_EF_BLUE);

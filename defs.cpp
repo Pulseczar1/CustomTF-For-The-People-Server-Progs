@@ -913,10 +913,10 @@ float invade_timeToRewardDef;      // don't try to set it (it's set by functions
 // END Invade
 
 // PZ - can't believe these globals didn't already exist.. created them for AGR mode.
-float playersOnTeam1;
-float playersOnTeam2;
-float playersOnTeam3;
-float playersOnTeam4;
+int playersOnTeam1;
+int playersOnTeam2;
+int playersOnTeam3;
+int playersOnTeam4;
 
 /*==========================================================================*/
 /* Flamethrower                                                             */

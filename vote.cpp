@@ -10,7 +10,7 @@
 
 #include "progs.h"
 #include "vote.h"
-#include "vote2.h"       // PZ: Added.
+#include "votebot.h"       // PZ: Added.
 #include "ofndefs.h"
 #include "spectate.h"
 #include "menu.h"
@@ -1998,7 +1998,7 @@ float CheckVoting(float final)
 			BroadcastSound("misc/runekey");
 			// Copy the votebot settings from the committed settings, of the player who started the vote, into
 			// the currently active bot settings.
-			copyVoteBotData(ENT_TO_NUM(current_voteent->owner)+MAX_CLIENTS, CURRENT, PR_VOTEBOT_MENU_MAIN);
+			voteBot.copyVoteBotData(ENT_TO_NUM(current_voteent->owner)+MAX_CLIENTS, VoteBot::CURRENT, PR_VOTEBOT_MENU_MAIN);
 			ResetVoteEnt(); // removes current vote entity
 			return PR_TRUE;
 		}

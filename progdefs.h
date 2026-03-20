@@ -307,10 +307,10 @@ namespace Progs
 	//extern float neoDamageFactor;
 	//extern float neoResistFactor;
 	//extern float neoRegenFactor;
-	extern float playersOnTeam1;
-	extern float playersOnTeam2;
-	extern float playersOnTeam3;
-	extern float playersOnTeam4;
+	extern int playersOnTeam1;
+	extern int playersOnTeam2;
+	extern int playersOnTeam3;
+	extern int playersOnTeam4;
 	extern float num_world_flames;
 	extern float num_world_pipebombs;
 	extern float num_team_pipebombs_1;

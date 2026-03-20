@@ -61,11 +61,11 @@ float Security_Camera_FindTarget()
 	loopc = 0;
 	gotone = PR_FALSE;
 
-    float trange; //- OfN - Hack
-    trange=1000;
+	float trange; //- OfN - Hack
+	trange = 1000;
 
-    if (self->all_active & PR_IMPROVED_ONE)
-        trange=1250;
+	if (self->all_active & PR_IMPROVED_ONE)
+		trange = 1250;
 
 	//CH Theortetically this will check every client on the server now
 	while (loopc < 32 && gotone == PR_FALSE)

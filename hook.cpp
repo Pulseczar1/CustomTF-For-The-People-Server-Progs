@@ -364,37 +364,37 @@ void Anchor_Grapple()
 //
 void Throw_Grapple()
 {
-        if (self->hook_out)// reject subsequent calls from player.qc
-                return;
+	if (self->hook_out)// reject subsequent calls from player.qc
+		return;
 
-		KickPlayer(-1, self);
+	KickPlayer(-1, self);
 
-        // chain out sound (loops)
+	// chain out sound (loops)
 
-        newmis = spawn();
-        newmis->movetype = PR_MOVETYPE_FLYMISSILE;
-        newmis->solid = PR_SOLID_BBOX;
-        newmis->owner = self;// newmis belongs to me
-        self->hook = newmis;// This is my newmis
-        newmis->classname = "hook";
+	newmis = spawn();
+	newmis->movetype = PR_MOVETYPE_FLYMISSILE;
+	newmis->solid = PR_SOLID_BBOX;
+	newmis->owner = self;// newmis belongs to me
+	self->hook = newmis;// This is my newmis
+	newmis->classname = "hook";
 
-        makevectors (self->v_angle);
-        newmis->velocity = v_forward * 800;
-//      newmis.avelocity = '0 0 -500';
+	makevectors (self->v_angle);
+	newmis->velocity = v_forward * 800;
+	//newmis.avelocity = '0 0 -500';
 
-		// set the facing of the grapple
-		newmis->angles = vectoangles(newmis->velocity);
+	// set the facing of the grapple
+	newmis->angles = vectoangles(newmis->velocity);
 
-        newmis->touch = Anchor_Grapple;
-        newmis->think = Build_Chain;
-        newmis->nextthink = time + 0.1;// don't jam newmis and links into same packet
+	newmis->touch = Anchor_Grapple;
+	newmis->think = Build_Chain;
+	newmis->nextthink = time + 0.1;// don't jam newmis and links into same packet
 
-        setmodel (newmis,"progs/hook.mdl");
-        setorigin (newmis, self->origin + v_forward * 16 + V({0, 0, 16}));
-        setsize(newmis, V({0, 0, 0}) , V({0, 0, 0 }));
+	setmodel (newmis,"progs/hook.mdl");
+	setorigin (newmis, self->origin + v_forward * 16 + V({0, 0, 16}));
+	setsize(newmis, V({0, 0, 0}) , V({0, 0, 0 }));
 
-        self->hook_out = PR_TRUE;
-        self->fire_held_down = PR_TRUE;
+	self->hook_out = PR_TRUE;
+	self->fire_held_down = PR_TRUE;
 }
 
 //

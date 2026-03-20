@@ -112,7 +112,7 @@ Delete the code in frik_attemptToLoadWaypointsForCurrentMap(), located below.
 #include "frikbot/bot_phys.h"
 #include "debug.h"
 #include "weapons.h"
-#include "vote2.h"
+#include "votebot.h"
 #include "admin.h"
 
 namespace Progs {
@@ -2023,7 +2023,8 @@ void frik_mainRoutine()
 	else         num = stof(h);
 
 	// if players voted for a different value, use it
-	if (botVoteMenuData[CURRENT].idealNumPlayers != 255) num = botVoteMenuData[CURRENT].idealNumPlayers;
+	unsigned char votedIdealNumPlayers = voteBot.getIdealNumPlayers(VoteBot::Settings::CURRENT);
+	if (votedIdealNumPlayers != 255) num = votedIdealNumPlayers;
 	int idealNumPlayers = num; // for use way down below
 
 	// PZ: Using num_clients here so that we can take downloaders into account and allow up to 31 bots at a time.
@@ -2118,9 +2119,12 @@ void frik_mainRoutine()
 	for (int i = 0; i < 5; i++) // for overall, team 1, team 2, etc.
 	{
 		// if players voted for different values, use them
-		if (botVoteMenuData[CURRENT].botLockedSkillLevel[i] != 255) lockedSkillLevel[i]  = botVoteMenuData[CURRENT].botLockedSkillLevel[i];
-		if (botVoteMenuData[CURRENT].botMinSkillLevel[i] != 255)    minimumSkillLevel[i] = botVoteMenuData[CURRENT].botMinSkillLevel[i];
-		if (botVoteMenuData[CURRENT].botMaxSkillLevel[i] != 255)    maximumSkillLevel[i] = botVoteMenuData[CURRENT].botMaxSkillLevel[i];
+		unsigned char votedBotLockedSkillLevel = voteBot.getBotLockedSkillLevel(VoteBot::Settings::CURRENT, i);
+		unsigned char votedBotMinSkillLevel    = voteBot.getBotMinSkillLevel(VoteBot::Settings::CURRENT, i);
+		unsigned char votedBotMaxSkillLevel    = voteBot.getBotMaxSkillLevel(VoteBot::Settings::CURRENT, i);
+		if (votedBotLockedSkillLevel != 255) lockedSkillLevel[i]  = votedBotLockedSkillLevel;
+		if (votedBotMinSkillLevel    != 255) minimumSkillLevel[i] = votedBotMinSkillLevel;
+		if (votedBotMaxSkillLevel    != 255) maximumSkillLevel[i] = votedBotMaxSkillLevel;
 
 		if (maximumSkillLevel[i] > 0 && minimumSkillLevel[i] > maximumSkillLevel[i]) minimumSkillLevel[i] = maximumSkillLevel[i];
 
@@ -2284,7 +2288,8 @@ void frik_mainRoutine()
 	// [Check that everyone is on the team that they should be on.]
 	// Check humans. (Force Humans To Team option)
 	int forceHumansToTeam = 0;
-	if (botVoteMenuData[CURRENT].forceHumansToTeam != 255) forceHumansToTeam = botVoteMenuData[CURRENT].forceHumansToTeam;
+	unsigned char votedForceHumansToTeam = voteBot.getForceHumansToTeam(VoteBot::Settings::CURRENT);
+	if (votedForceHumansToTeam != 255) forceHumansToTeam = votedForceHumansToTeam;
 	if (forceHumansToTeam)
 	{
 		entity oldSelf = self;
@@ -2304,15 +2309,20 @@ void frik_mainRoutine()
 	}
 	// Check bots.   bot_count, num_players, playersOnTeam1, etc.
 	float percentPlyrsPerTeam[4] = {255, 255, 255, 255};
-	for (int i = 0; i < 4; i++) percentPlyrsPerTeam[i] = botVoteMenuData[CURRENT].percentPlyrsPerTeam[i] / 100.0;
+	unsigned char votedPercentPlyrsPerTeam[4];
+	for (int i = 0; i < 4; i++)
+	{
+		votedPercentPlyrsPerTeam[i] = voteBot.getPercentPlyrsPerTeam(VoteBot::Settings::CURRENT, i);
+		if (votedPercentPlyrsPerTeam[i] != 255) percentPlyrsPerTeam[i] = votedPercentPlyrsPerTeam[i] / 100.0;
+	}
 	int playersOnTeam[4] = {playersOnTeam1, playersOnTeam2, playersOnTeam3, playersOnTeam4}; // TODO: change these globals to ints; also, this should be the number of bots, not all players
 	// Go through each team, checking that the team does not exceed voted-for player count limits. For every team that does exceed,
 	// move a bot from that team to another team with room for more.
 	for (int i = 0;  i < 4 && (i < number_of_teams);  i++)
 	{
-		if (botVoteMenuData[CURRENT].percentPlyrsPerTeam[i] != 255)
+		if (votedPercentPlyrsPerTeam[i] != 255)
 		{
-			//percentPlyrsPerTeam[i] = botVoteMenuData[CURRENT].percentPlyrsPerTeam[i] / 100.0;
+			//percentPlyrsPerTeam[i] = voteBotMenuData[CURRENT].percentPlyrsPerTeam[i] / 100.0;
 			if ((playersOnTeam[i] / (float)num_players) > percentPlyrsPerTeam[i])
 			{
 				// [Randomly switch a bot on this team to a team with not enough players, if one exists. Otherwise, do nothing.]
@@ -2320,9 +2330,9 @@ void frik_mainRoutine()
 				//bool breakLoop = false;
 				for (int k = 0;  k < 4 && (k < number_of_teams) /*&& !breakLoop*/;  k++)
 				{
-					if (botVoteMenuData[CURRENT].percentPlyrsPerTeam[k] != 255)
+					if (votedPercentPlyrsPerTeam[k] != 255)
 					{
-						//percentPlyrsPerTeam[k] = botVoteMenuData[CURRENT].percentPlyrsPerTeam[k] / 100.0;
+						//percentPlyrsPerTeam[k] = voteBotMenuData[CURRENT].percentPlyrsPerTeam[k] / 100.0;
 						if (((playersOnTeam[k] + 1) / (float)num_players) <= percentPlyrsPerTeam[k]) // we add 1 here to check that there is room for a player to be added to this team
 						{
 							// Make a random bot on team |i+1| switch to team |k+1|.
@@ -2359,10 +2369,12 @@ void frik_mainRoutine()
 	int botClassCounter[4][9];          countBotClasses(botClassCounter);
 	bool useOverallSettings[4] = {0, 0, 0, 0};
 	float botClassPercentage[5][10]; // we use -1 here to indicate no entry (rather than 255)
+	unsigned char votedBotClassPercentage[5][10];
 	for (int i = 0; i < 5; i++) for (int k = 0; k < 10; k++)
 	{
-		if (botVoteMenuData[CURRENT].botClassPercentage[i][k] != 255)
-			botClassPercentage[i][k] = botVoteMenuData[CURRENT].botClassPercentage[i][k] / 100.0;
+		votedBotClassPercentage[i][k] = voteBot.getBotClassPercentage(VoteBot::Settings::CURRENT, i, k);
+		if (votedBotClassPercentage[i][k] != 255)
+			botClassPercentage[i][k] = votedBotClassPercentage[i][k] / 100.0;
 		else botClassPercentage[i][k] = -1;
 	}
 	// [For voting bot classes, Overall changes to classes will affect only teams that don't have any percentages set. It would be too complicated

@@ -19,7 +19,7 @@
 #include "environ.h"
 #include "admin.h"
 #include "vote.h"
-#include "vote2.h"
+#include "votebot.h"
 #include "frikbot/bot_qw.h"
 
 namespace Progs {
@@ -547,7 +547,7 @@ void SpectatorImpulseCommand()
 	}
 	else if (self->impulse == PR_IMPULSE_VOTEBOT) // PZ: for "votebot"
 	{
-		Player_VoteBot();
+		voteBot.Player_VoteBot();
 	}
 	else if (self->impulse == PR_IMPULSE_VOTEYES)
 	{
@@ -578,7 +578,7 @@ void SpectatorImpulseCommand()
 		else if (self->current_menu == PR_SPEC_MENU_VOTEMAP)
 			Menu_VoteMap_Input(self->impulse);
 		else if (self->current_menu == PR_SPEC_MENU_VOTEBOT) // PZ: for "votebot"
-			Menu_VoteBot_Input(self->impulse);
+			voteBot.Menu_VoteBot_Input(self->impulse);
 	}
 	else if (self->current_menu == PR_SPEC_MENU_NONE && self->impulse == 10)
 	{
@@ -655,7 +655,7 @@ void SpectatorThink()
 	}
 	else if (self->current_menu == PR_SPEC_MENU_VOTEBOT) // PZ: for "votebot"
 	{
-		Menu_VoteBot();
+		voteBot.Menu_VoteBot();
 	}
 }
 

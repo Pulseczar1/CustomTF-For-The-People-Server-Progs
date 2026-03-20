@@ -99,10 +99,10 @@ void MirvGrenadeExplode()
 	self->solid = PR_SOLID_NOT;
 
 	// Launch mirvs
-    if (self->netname != "special_mine")
-        nummirvs = PR_GR_TYPE_MIRV_NO;
-    else
-        nummirvs = PR_MINE_MIRV_NUM;
+	if (self->netname != "special_mine")
+		nummirvs = PR_GR_TYPE_MIRV_NO;
+	else
+		nummirvs = PR_MINE_MIRV_NUM;
 
 	i = 0;
 	while (i < nummirvs)

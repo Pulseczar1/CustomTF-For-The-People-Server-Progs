@@ -1047,10 +1047,10 @@ void DeathBubbles(float num_bubbles)
 	bubble_spawner->bubble_count = num_bubbles;
 
 	// Gizmo - allow non demons and non army soldiers to be affected (coop monsters)
-    if (IsMonster(self))
-        bubble_spawner->has_holo = 1; // forced mode
-    else
-        bubble_spawner->has_holo = 0; // normal mode
+	if (IsMonster(self))
+		bubble_spawner->has_holo = 1; // forced mode
+	else
+		bubble_spawner->has_holo = 0; // normal mode
 
 	return;
 }

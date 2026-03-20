@@ -948,9 +948,9 @@ void TF_T_Damage(entity targ, entity inflictor, entity attacker, float damage, i
 
 	}
 
-    // Should we do any pain stuff?
-    if (T_flags & PR_TF_TD_NOPAIN)
-        return; // Just end
+	// Should we do any pain stuff?
+	if (T_flags & PR_TF_TD_NOPAIN)
+		return; // Just end
 
 	// react to the damage
 	te = self;

@@ -29,7 +29,7 @@ connects & disconnects, and when a map changes levels
 #include "weapons.h"
 #include "prozac.h"
 #include "status.h"
-#include "vote2.h"
+#include "votebot.h"
 #include "neo.h"
 
 namespace Progs {
@@ -3230,11 +3230,11 @@ void PlayerPreThink()
 	if (self->deadflag == PR_DEAD_DYING)
 		return; // dying, so do nothing
 
-	// PZ: For the votebot menu. To detect termination of numerical input with Enter (jump button).
-	if (self->PR_BUTTON_JUMP && botVoteMenuData[ENT_TO_NUM(self)].gettingNumInput)
+	// PZ: This allows the votebot menu to detect termination of numerical input with the Enter key (jump button).
+	if (self->PR_BUTTON_JUMP && voteBot.isGettingNumInput(self))
 	{
-        voteBotValueEntryDone(self);
-        self->PR_BUTTON_JUMP = 0;     // eat the jump (doesn't work because one press likely hits several frames)
+		voteBot.voteBotValueEntryDone(self);
+		self->PR_BUTTON_JUMP = 0;     // eat the jump (doesn't work because one press likely hits several frames)
 	}
 
 	if (!self->is_feigning)

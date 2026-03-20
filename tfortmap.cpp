@@ -2327,12 +2327,12 @@ void DoResults(entity Goal, entity AP, float addb)
 	#endif
 #endif
 
-    //- OfN if Goal.option is 1 then no sound attenuation (ATTN_NONE)
-    float attn_value;
-    attn_value=PR_ATTN_NORM;
+	//- OfN if Goal.option is 1 then no sound attenuation (ATTN_NONE)
+	float attn_value;
+	attn_value=PR_ATTN_NORM;
 
-    if (Goal->option == 1)
-        attn_value=PR_ATTN_NONE;
+	if (Goal->option == 1)
+		attn_value=PR_ATTN_NONE;
 
 	// Make the sound
 	if (Goal->noise != "")
@@ -2742,8 +2742,8 @@ void tfgoal_touch()
 	if (prematch >= time)
 		return;
 
-    if (other->health <= 0) // dead players out
-        return;
+	if (other->health <= 0) // dead players out
+		return;
 
 	// If it's already active, don't bother
 	if (self->goal_state == PR_TFGS_ACTIVE)
@@ -2894,10 +2894,9 @@ void item_tfgoal_touch()
 	if (other->penance_time >= time)
 		return;
 
-    // OfN - Dont let them pick it up repeatedly
-    if (self->demon_one == other)
-    if (self->has_holo > time)
-        return;
+	// OfN - Dont let them pick it up repeatedly
+	if (self->demon_one == other && self->has_holo > time)
+		return;
 
 	// CTF Hack to return your key.
 	// Temporary hack :)

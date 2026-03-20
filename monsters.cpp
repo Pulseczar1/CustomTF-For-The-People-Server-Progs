@@ -565,14 +565,14 @@ void monster_death_use()
 
 void walkmonster_start_go()
 {
-//	local entity	etemp;
-//	local float		failure;
-//	local vector	test;
+	//local entity	etemp;
+	//local float		failure;
+	//local vector	test;
 
 	self->origin[Z] = self->origin[Z] + 1;	// raise off floor a bit
 	droptofloor();
 
-/*	failure = 1;
+	/*failure = 1;
 
 	test = self.origin;
 	test_z = test_z - self.mins_z - 1;
@@ -600,55 +600,54 @@ void walkmonster_start_go()
 
 	if (pointcontents(test) == #CONTENT_SOLID)
 		failure = 0;
-*/
+	*/
 
 	if (!walkmove(0,0))
-//	if (failure)
+	//if (failure)
 	{
-/*		RPrint ("walkmonster in wall at: ");
+		/*RPrint ("walkmonster in wall at: ");
 		RPrint (vtos(self.origin));
-		RPrint ("\n"); */
+		RPrint ("\n");*/
 
-        if (IsOwnedMonster(self))
-			if (self->real_owner->classname == "player")
+		if (IsOwnedMonster(self) && self->real_owner->classname == "player")
+		{
+			//self.real_owner.job = self.real_owner.job - (self.real_owner.job & #JOB_DEMON_OUT);
+			string MName;
+			MName=GetMonsterName(self);
+			sprint(self->real_owner,PR_PRINT_HIGH,"Your ");
+			sprint(self->real_owner,PR_PRINT_HIGH,MName);
+			sprint(self->real_owner,PR_PRINT_HIGH," was beamed into a wall and died.\n");
+
+			/* TODO:
+			if (self.classname == "monster_shambler") //- ofn
 			{
-				//self.real_owner.job = self.real_owner.job - (self.real_owner.job & #JOB_DEMON_OUT);
-				string MName;
-                MName=GetMonsterName(self);
-                sprint(self->real_owner,PR_PRINT_HIGH,"Your ");
-                sprint(self->real_owner,PR_PRINT_HIGH,MName);
-                sprint(self->real_owner,PR_PRINT_HIGH," was beamed into a wall and died.\n");
-
-				/* TODO:
-                if (self.classname == "monster_shambler") //- ofn
-				{
-					self.real_owner.demon_blood = self.real_owner.demon_blood + 4;
-					if (self.real_owner.demon_blood > #MAX_KNIFE_BLOOD)
-						self.real_owner.demon_blood = #MAX_KNIFE_BLOOD;
-				}
-                else if (self.classname == "monster_demon1") //- ofn
-				{
-					self.real_owner.demon_blood = self.real_owner.demon_blood + 2;
-					if (self.real_owner.demon_blood > #MAX_KNIFE_BLOOD)
-						self.real_owner.demon_blood = #MAX_KNIFE_BLOOD;
-				}*/
-
-                /*else if (self.classname == "monster_wizard") //- ofn
-				{
-					self.real_owner.demon_blood = self.real_owner.demon_blood + ? ;
-					if (self.real_owner.demon_blood > #MAX_KNIFE_BLOOD)
-						self.real_owner.demon_blood = #MAX_KNIFE_BLOOD;
-				}*/
-
-                //kill_his_demons(self.real_owner);
-                KillSoul(self->real_owner,self->increase_team1);
-				// PZ: give warlock resources (hearts, etc.) back (TODO: meat, heads?)
-				float knifekills, neededhearts;
-				knifekills = GetHearts(self->real_owner);
-				neededhearts = GetNeededHearts(self->real_owner, self->PR_monster_type);	// type should be same as input
-				SetHearts(self->real_owner, knifekills + neededhearts);
-                return;
+				self.real_owner.demon_blood = self.real_owner.demon_blood + 4;
+				if (self.real_owner.demon_blood > #MAX_KNIFE_BLOOD)
+					self.real_owner.demon_blood = #MAX_KNIFE_BLOOD;
 			}
+			else if (self.classname == "monster_demon1") //- ofn
+			{
+				self.real_owner.demon_blood = self.real_owner.demon_blood + 2;
+				if (self.real_owner.demon_blood > #MAX_KNIFE_BLOOD)
+					self.real_owner.demon_blood = #MAX_KNIFE_BLOOD;
+			}*/
+
+			/*else if (self.classname == "monster_wizard") //- ofn
+			{
+				self.real_owner.demon_blood = self.real_owner.demon_blood + ? ;
+				if (self.real_owner.demon_blood > #MAX_KNIFE_BLOOD)
+					self.real_owner.demon_blood = #MAX_KNIFE_BLOOD;
+			}*/
+
+			//kill_his_demons(self.real_owner);
+			KillSoul(self->real_owner,self->increase_team1);
+			// PZ: give warlock resources (hearts, etc.) back (TODO: meat, heads?)
+			float knifekills, neededhearts;
+			knifekills = GetHearts(self->real_owner);
+			neededhearts = GetNeededHearts(self->real_owner, self->PR_monster_type);	// type should be same as input
+			SetHearts(self->real_owner, knifekills + neededhearts);
+			return;
+		}
 		dremove(self);
 		return;
 	}
@@ -674,12 +673,16 @@ void walkmonster_start_go()
 			RPrint (vtos(self->origin));
 			RPrint ("\n");
 		}
-// this used to be an objerror
+		// this used to be an objerror
 		if (self->movetarget->classname == "path_corner")
 			self->th_walk ();
 		else
 			self->pausetime = 99999999;
-			self->th_stand ();
+		// PZ WARNING (3-20-2026): This was indented like it was meant to be part of the `else`, but without brackets,
+		// isn't part of the `else`. I didn't put the brackets in, because that would change the current functionality.
+		// As it is, th_stand() always gets called even if th_walk() is called above. I don't know whether that is wrong,
+		// and I'm not looking into it right now. I'm just trying to fix -Wmisleading-indentation warnings.
+		self->th_stand();
 	}
 	else
 	{
@@ -689,18 +692,18 @@ void walkmonster_start_go()
 
 	if (self->classname == "monster_army")
 	{
-        self->martyr_enemy = CreateWaypoint(self->origin,PR_WAYPOINT_LIFE,PR_WAYPOINT_TYPE_PRIMARY, self);
+		self->martyr_enemy = CreateWaypoint(self->origin,PR_WAYPOINT_LIFE,PR_WAYPOINT_TYPE_PRIMARY, self);
 		self->martyr_enemy->goalentity = world;
 
-        // OFTEN
-        self->demon_two=world;
-        self->demon_one=world;
-        // OFTEN
+		// OFTEN
+		self->demon_two=world;
+		self->demon_one=world;
+		// OFTEN
 
 		self->goalentity = world;
 	}
 
-// spread think times so they don't all happen at same time
+	// spread think times so they don't all happen at same time
 	self->nextthink = self->nextthink + random()*0.5;
 }
 
@@ -749,12 +752,16 @@ void flymonster_start_go()
 			RPrint (vtos(self->origin));
 			RPrint ("\n");
 		}
-// this used to be an objerror
+		// this used to be an objerror
 		if (self->movetarget->classname == "path_corner")
 			self->th_walk ();
 		else
 			self->pausetime = 99999999;
-			self->th_stand ();
+		// PZ WARNING (3-20-2026): This was indented like it was meant to be part of the `else`, but without brackets,
+		// isn't part of the `else`. I didn't put the brackets in, because that would change the current functionality.
+		// As it is, th_stand() always gets called even if th_walk() is called above. I don't know whether that is wrong,
+		// and I'm not looking into it right now. I'm just trying to fix -Wmisleading-indentation warnings.
+		self->th_stand();
 	}
 	else
 	{
